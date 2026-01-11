@@ -24,6 +24,9 @@
     <ClCompile Include="Eyeball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Eyelid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="drawFunctions.h">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Eyeball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Eyelid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

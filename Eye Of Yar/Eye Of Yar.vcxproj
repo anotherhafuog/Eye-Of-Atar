@@ -135,11 +135,13 @@
   <ItemGroup>
     <ClCompile Include="drawFunctions.cpp" />
     <ClCompile Include="Eyeball.cpp" />
+    <ClCompile Include="Eyelid.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="drawFunctions.h" />
     <ClInclude Include="Eyeball.h" />
+    <ClInclude Include="Eyelid.h" />
     <ClInclude Include="GameObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
