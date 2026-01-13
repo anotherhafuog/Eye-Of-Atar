@@ -4,19 +4,17 @@
 #include "GameObject.h"
 #include "Eyeball.h"
 #include "Eyelid.h"
+#include "Atar.h"
 
 using namespace std;
 
 int main() {
 
 	initWindow(2560, 1440, SDL_WINDOW_FULLSCREEN_DESKTOP, 4.0);
-	//defines colors (r,g,b, alpha)
-	SDL_Color halfBlue = { 0, 0, 255, 128 }; //todo: make color table and brightness manip functions
-	SDL_Color halfRed = { 255, 0, 0, 128 }; 
-	SDL_Color halfWhite = { 255, 255, 255, 128 };
 
 	Eyeball gameEyeball;
 	Eyelid gameEyelid;
+	Atar gameAtar;
 
 	//game loop
 	bool running = 1;
@@ -32,6 +30,8 @@ int main() {
 				cout << "a is pressed\n";
 			}
 		}
+		gameAtar.Update();
+		gameAtar.Render();
 		gameEyeball.Update();
 		gameEyeball.Render();
 		gameEyelid.Update();
