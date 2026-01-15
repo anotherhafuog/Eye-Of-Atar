@@ -41,7 +41,47 @@ Atar::~Atar() {
 
 }
 
-void Atar::Update() {
+void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
+	int speed = 10;
+	if (pressed[SDL_SCANCODE_W]) {
+		if (pressed[SDL_SCANCODE_A]) {
+			angle = -3.14 / 4;
+			position.x -= speed;
+		}
+		else if (pressed[SDL_SCANCODE_D]) {
+			angle = 3.14 / 4;
+			position.x += speed;
+		}
+		else{
+			angle = 0;
+		}
+		position.y -= speed;
+	}
+	else if (pressed[SDL_SCANCODE_S]) {
+		if (pressed[SDL_SCANCODE_A]) {
+			angle = -3*3.14 / 4;
+			position.x -= speed;
+		}
+		else if (pressed[SDL_SCANCODE_D]) {
+			angle = 3*3.14 / 4;
+			position.x += speed;
+		}
+		else {
+			angle = 3.14;
+		}
+		position.y += speed;
+	}
+	else if (pressed[SDL_SCANCODE_A]) {
+		angle = -3.14 / 2;
+		position.x -= speed;
+	}
+	else if (pressed[SDL_SCANCODE_D]) {
+		angle = 3.14 / 2;
+		position.x += speed;
+	}
+	else {
+
+	}
 	/*switch (animationState) {
 	case 0:
 		vectorData = flapDown;

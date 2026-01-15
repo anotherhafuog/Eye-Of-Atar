@@ -16,6 +16,6 @@ Eyeball::~Eyeball() {
 
 }
 
-void Eyeball::Update() {
+void Eyeball::Update(int frameCount) {
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
 }

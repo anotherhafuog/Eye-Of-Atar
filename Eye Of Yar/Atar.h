@@ -2,6 +2,7 @@
 #define ATAR_H
 #include <SDL.h>
 #include <vector>
+//#include <iostream>
 #include "drawFunctions.h"
 #include "GameObject.h"
 
@@ -15,7 +16,7 @@ public:
 
 	~Atar();
 
-	void Update();
+	void Update(int, const bool pressed[SDL_NUM_SCANCODES]);
 };
 
 #endif

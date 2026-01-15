@@ -11,7 +11,7 @@ class Eyeball : public GameEntity {
 
 		~Eyeball();
 
-		void Update();
+		void Update(int);
 };
 
 #endif

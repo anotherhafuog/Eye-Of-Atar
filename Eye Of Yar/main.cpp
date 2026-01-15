@@ -16,35 +16,49 @@ int main() {
 	Eyelid gameEyelid;
 	Atar gameAtar;
 
+	static int frameCount = 0;
+	struct InputState {
+		bool quit = 0;
+		bool held[SDL_NUM_SCANCODES];
+	};
+
+	InputState input = {};
+
 	//game loop
-	bool running = 1;
-	while (running) {
+	while (!input.quit) {
 		Uint32 start = SDL_GetTicks();
 		SDL_Event event;
-		while(SDL_PollEvent(&event)){
-			//handle each event
-			if (event.type == SDL_QUIT) {
-				running = false;
-			}
-			if (event.key.keysym.sym == SDLK_a) {
-				cout << "a is pressed\n";
-			}
-		}
-		gameAtar.Update();
-		gameAtar.Render();
-		gameEyeball.Update();
-		gameEyeball.Render();
-		gameEyelid.Update();
-		gameEyelid.Render();
+		while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+			case SDL_QUIT:
+				input.quit = true;
+				break;
+			case SDL_KEYDOWN:
+				if (!event.key.repeat) {  // avoid multiple repeats
+					input.held[event.key.keysym.scancode] = true;
+				}
+				break;
 
-		renderFrame();
-		clearScreen();
-		Uint32 elapsed = SDL_GetTicks()-start;
-		if (elapsed < 16) {
-			SDL_Delay(16 - elapsed);
+			case SDL_KEYUP:
+				input.held[event.key.keysym.scancode] = false;
+				break;
+			}
 		}
+			gameAtar.Update(frameCount, input.held);
+			gameAtar.Render();
+			gameEyeball.Update(frameCount);
+			gameEyeball.Render();
+			gameEyelid.Update();
+			gameEyelid.Render();
+
+			renderFrame();
+			clearScreen();
+			++frameCount;
+			Uint32 elapsed = SDL_GetTicks() - start;
+			if (elapsed < 16) {
+				SDL_Delay(16 - elapsed);
+			}
 	}
-	
-	killRender();
-	return EXIT_SUCCESS;
+		killRender();
+		return EXIT_SUCCESS;
 }
