@@ -2,7 +2,7 @@
 using namespace std;
 
 Atar::Atar() {
-	vector<SDL_Point> flapUp =
+	flapUp =
 	{ {-3, -5}, { -2,-6 }, { 2,-6 }, { 3,-5 }, { 3,-1 }, { 2,0 }, { -2,0 }, { -3,-1 }, /*head*/
 		{ -2,7 }, { 2,7 }, { 4,9 }, { -4,9 }, /*tail*/
 		{ -3,-7 }, { -2,-9 }, { -1,-7 }, /*antenna left*/
@@ -10,7 +10,7 @@ Atar::Atar() {
 		{ -7,1 }, { -10,0 }, { -8,-8 }, { -3,-1 }, /*wing left*/
 		{ 7,1 }, { 10,0 }, { 8,-8 }, { 3,-1 } /*wing right*/
 	};
-	vector<SDL_Point> flapDown =
+	flapDown =
 	{ {-3,-5}, {-2,-6}, {2,-6}, {3,-5}, {3,-1}, {2,0}, {-2,0}, {-3,-1}, /*head*/
 		{-2,7}, {2,7}, {4,9}, {-4,9}, /*tail*/
 		{-3,-7}, {-2,-9}, {-1,-7}, /*antenna left*/
@@ -34,7 +34,7 @@ Atar::Atar() {
 	scale = 4;
 	angle = 0;
 	color = { 255, 0, 255, 128 };
-	//animationState = 0;
+	animationState = 0;
 }
 
 Atar::~Atar() {
@@ -43,33 +43,39 @@ Atar::~Atar() {
 
 void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
 	int speed = 10;
+	bool noInput = false;
 	if (pressed[SDL_SCANCODE_W]) {
 		if (pressed[SDL_SCANCODE_A]) {
 			angle = -3.14 / 4;
 			position.x -= speed;
+			position.y -= speed;
 		}
 		else if (pressed[SDL_SCANCODE_D]) {
 			angle = 3.14 / 4;
-			position.x += speed;
+			position.x += speed * .707;
+			position.y -= speed * .707;
 		}
 		else{
 			angle = 0;
+			position.y -= speed;
 		}
-		position.y -= speed;
+		
 	}
 	else if (pressed[SDL_SCANCODE_S]) {
 		if (pressed[SDL_SCANCODE_A]) {
 			angle = -3*3.14 / 4;
-			position.x -= speed;
+			position.x -= speed *.707;
+			position.y += speed * .707;
 		}
 		else if (pressed[SDL_SCANCODE_D]) {
 			angle = 3*3.14 / 4;
-			position.x += speed;
+			position.x += speed * .707;
+			position.y += speed * .707;
 		}
 		else {
 			angle = 3.14;
+			position.y += speed;
 		}
-		position.y += speed;
 	}
 	else if (pressed[SDL_SCANCODE_A]) {
 		angle = -3.14 / 2;
@@ -80,15 +86,30 @@ void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
 		position.x += speed;
 	}
 	else {
+		noInput = true;
+	}
 
+	if (noInput){
+		if (frameCount % 5 == 0) {
+			if (!animationState) {
+				vectorData = flapDown;
+			}
+			else {
+				vectorData = flapUp;
+			}
+			animationState = !animationState;
+		}
 	}
-	/*switch (animationState) {
-	case 0:
-		vectorData = flapDown;
-		break;
-	case 1:
-		vectorData = flapUp;
+	else{
+		if (frameCount % 2 == 0) {
+			if (!animationState) {
+				vectorData = flapDown;
+			}
+			else {
+				vectorData = flapUp;
+			}
+			animationState = !animationState;
+		}
 	}
-	animationState = !animationState;*/
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
 }

@@ -7,10 +7,10 @@
 #include "GameObject.h"
 
 class Atar : public GameEntity {
-/*private:
+private:
 	bool animationState;
-	vector<SDL_Point> flapDown;
-	vector<SDL_Point> flapUp;*/
+	std::vector<SDL_Point> flapDown;
+	std::vector<SDL_Point> flapUp;
 public:
 	Atar();
 
