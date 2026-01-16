@@ -6,6 +6,7 @@
 #include "Eyelid.h"
 #include "Atar.h"
 #include "GammaField.h"
+#include "MagicPixel.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ int main() {
 	Eyelid gameEyelid;
 	Atar gameAtar;
 	GammaField gameGamma(gameSpeed);
+	MagicPixel gamePixel;
 
 	//game loop
 	while (!input.quit) {
@@ -51,7 +53,7 @@ int main() {
 			gameAtar.Update(frameCount, input.held);
 			gameAtar.Render();
 
-			gameEyeball.Update(frameCount);
+			gameEyeball.Update(frameCount, gameAtar.getPosition());
 			gameEyeball.Render();
 
 			gameEyelid.Update();
@@ -59,6 +61,9 @@ int main() {
 
 			gameGamma.Update();
 			gameGamma.Render();
+
+			gamePixel.Update(frameCount, gameSpeed, gameAtar.getPosition());
+			gamePixel.Render();
 
 			renderFrame();
 			clearScreen();

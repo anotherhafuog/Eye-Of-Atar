@@ -11,7 +11,7 @@ class Eyeball : public GameEntity {
 
 		~Eyeball();
 
-		void Update(int);
+		void Update(int, SDL_Point);
 };
 
 #endif
