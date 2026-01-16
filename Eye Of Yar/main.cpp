@@ -5,6 +5,7 @@
 #include "Eyeball.h"
 #include "Eyelid.h"
 #include "Atar.h"
+#include "GammaField.h"
 
 using namespace std;
 
@@ -12,17 +13,20 @@ int main() {
 
 	initWindow(2560, 1440, SDL_WINDOW_FULLSCREEN_DESKTOP, 4.0);
 
-	Eyeball gameEyeball;
-	Eyelid gameEyelid;
-	Atar gameAtar;
 
 	static int frameCount = 0;
+	static int gameSpeed = 1;
 	struct InputState {
 		bool quit = 0;
 		bool held[SDL_NUM_SCANCODES];
 	};
 
 	InputState input = {};
+
+	Eyeball gameEyeball;
+	Eyelid gameEyelid;
+	Atar gameAtar;
+	GammaField gameGamma(gameSpeed);
 
 	//game loop
 	while (!input.quit) {
@@ -46,10 +50,15 @@ int main() {
 		}
 			gameAtar.Update(frameCount, input.held);
 			gameAtar.Render();
+
 			gameEyeball.Update(frameCount);
 			gameEyeball.Render();
+
 			gameEyelid.Update();
 			gameEyelid.Render();
+
+			gameGamma.Update();
+			gameGamma.Render();
 
 			renderFrame();
 			clearScreen();

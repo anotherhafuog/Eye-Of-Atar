@@ -2,7 +2,7 @@
 #define ATAR_H
 #include <SDL.h>
 #include <vector>
-//#include <iostream>
+#include <cmath>
 #include "drawFunctions.h"
 #include "GameObject.h"
 

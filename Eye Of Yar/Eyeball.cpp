@@ -9,7 +9,7 @@ Eyeball::Eyeball() {
 	indiceCt = 8;
 	scale = 16;
 	angle = 0;
-	color = { 255, 255, 0, 128 };
+	color = { 255, 255, 0, 255 };
 }
 
 Eyeball::~Eyeball() {

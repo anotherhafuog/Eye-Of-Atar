@@ -137,6 +137,8 @@
     <ClCompile Include="drawFunctions.cpp" />
     <ClCompile Include="Eyeball.cpp" />
     <ClCompile Include="Eyelid.cpp" />
+    <ClCompile Include="GammaField.cpp" />
+    <ClCompile Include="GammaRing.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +147,8 @@
     <ClInclude Include="Eyeball.h" />
     <ClInclude Include="Eyelid.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GammaField.h" />
+    <ClInclude Include="GammaRing.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

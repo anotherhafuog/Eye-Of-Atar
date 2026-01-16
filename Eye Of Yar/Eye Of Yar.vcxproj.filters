@@ -30,6 +30,12 @@
     <ClCompile Include="Atar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GammaRing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GammaField.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="drawFunctions.h">
@@ -45,6 +51,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Atar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GammaRing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GammaField.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

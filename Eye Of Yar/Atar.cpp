@@ -46,12 +46,12 @@ void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
 	bool noInput = false;
 	if (pressed[SDL_SCANCODE_W]) {
 		if (pressed[SDL_SCANCODE_A]) {
-			angle = -3.14 / 4;
+			angle = -M_PI / 4;
 			position.x -= speed;
 			position.y -= speed;
 		}
 		else if (pressed[SDL_SCANCODE_D]) {
-			angle = 3.14 / 4;
+			angle = M_PI / 4;
 			position.x += speed * .707;
 			position.y -= speed * .707;
 		}
@@ -63,26 +63,26 @@ void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
 	}
 	else if (pressed[SDL_SCANCODE_S]) {
 		if (pressed[SDL_SCANCODE_A]) {
-			angle = -3*3.14 / 4;
+			angle = -3*M_PI / 4;
 			position.x -= speed *.707;
 			position.y += speed * .707;
 		}
 		else if (pressed[SDL_SCANCODE_D]) {
-			angle = 3*3.14 / 4;
+			angle = 3*M_PI / 4;
 			position.x += speed * .707;
 			position.y += speed * .707;
 		}
 		else {
-			angle = 3.14;
+			angle = M_PI;
 			position.y += speed;
 		}
 	}
 	else if (pressed[SDL_SCANCODE_A]) {
-		angle = -3.14 / 2;
+		angle = -M_PI / 2;
 		position.x -= speed;
 	}
 	else if (pressed[SDL_SCANCODE_D]) {
-		angle = 3.14 / 2;
+		angle = M_PI / 2;
 		position.x += speed;
 	}
 	else {
