@@ -65,27 +65,76 @@ void transformPoints(const vector<SDL_Point> &localPts, vector<SDL_Point> &world
 }
 
 void printChar(unsigned char theChar, SDL_Point centerPt, SDL_Color color, float scale) {
-	struct{
-		vector<SDL_Point> localPts = {{0,0}}; //make this array later
-		vector<SDL_Point> worldPts = {{0,0}}; //make this array later
-		int ptCt;
-		int indiceCt;
-		vector<int> indices = {0}; //make this array later
-	}letter;
-	switch (theChar) {
-	case 'A':
-		//assign local points
-		break;
-		//...
+	vector<SDL_Point> worldPts; 
+	if ((theChar < 48) || (theChar > 57)) {
+		transformPoints({{0,0}, {8,0}, {8,6}, {0,6}, {0,8}, {0,10}, {0,12}},
+			worldPts, 7, centerPt, scale, 0);
+		drawVectorPic(worldPts, {0,1,1,2,2,3,3,4,5,6}, 10, color);
+	}// draw ?
+	else {
+		int letterIndex = theChar - 48;
+
+		vector<SDL_Point> charVecs[10] = {
+			{{0,0}, {8,0}, {8,12}, {0,12}}, //0
+			{{4,0}, {4,12}}, //1
+			{{0,0}, {8,0}, {8,6}, {0,6}, {0,12}, {8,12}}, //2
+			{{0,0}, {8,0}, {8,6}, {0,6}, {8,12}, {0,12}}, //3
+			{{0,0}, {0,6}, {8,6}, {8,0}, {8,12}}, //4
+			{{8,0}, {0,0}, {0,6}, {8,6}, {8,12}, {0,12}}, //5
+			{{0,0}, {0,12}, {8,12}, {8,6}, {0,6}}, //6
+			{{0,0}, {8,0}, {8,12}}, //7
+			{{0,0}, {8,0}, {8,12}, {0,12}, {0,6}, {8,6}}, //8
+			{{8,0}, {0,0}, {0,6}, {8,6}, {8,12}} //9
+		};
+
+		vector <int> charIndices[10] = {
+			{0,1,1,2,2,3,3,0}, //0
+			{0,1}, //1
+			{0,1,1,2,2,3,3,4,4,5}, //2
+			{0,1,1,2,2,3,2,4,4,5}, //3
+			{0,1,1,2,3,4},  //4
+			{0,1,1,2,2,3,3,4,4,5}, //5
+			{0,1,1,2,2,3,3,4}, //6
+			{0,1,1,2}, //7
+			{0,1,1,2,2,3,3,0,4,5}, //8
+			{0,1,1,2,2,3,0,4} //9
+		};
+
+		int charPtCt[10] = {
+			4, //0
+			2, //1
+			6, //2
+			6, //3
+			5, //4
+			6, //5
+			5, //6
+			3, //7
+			6, //8
+			5 //9
+		};
+
+		int charIndiceCt[10] = {
+			8, //0
+			2, //1
+			10, //2
+			10, //3
+			6, //4
+			10, //5
+			8, //6
+			4, //7
+			10, //8
+			8 //9
+		};
+
+		transformPoints(charVecs[letterIndex], worldPts, charPtCt[letterIndex], centerPt, scale, 0);
+		drawVectorPic(worldPts, charIndices[letterIndex], charIndiceCt[letterIndex], color);
 	}
-	transformPoints(letter.localPts, letter.worldPts, letter.ptCt, centerPt, scale, 0);
-	drawVectorPic(letter.worldPts, letter.indices, letter.indiceCt, color);
 }
 
 void printString(string theString, SDL_Point pt, SDL_Color color, float scale) {
 	for (char& c : theString) {
 		printChar(c, pt, color, scale);
-		//iterate pt by some amount based on scale
+		pt.x += 10 * scale;
 	}
 }
 

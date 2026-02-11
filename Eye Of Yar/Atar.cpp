@@ -35,6 +35,11 @@ Atar::Atar() {
 	angle = 0;
 	color = { 255, 0, 255, 128 };
 	animationState = 0;
+
+	hitbox.x = position.x - (8 * scale);
+	hitbox.y = position.y - (8 * scale);
+	hitbox.w = 16 * scale;
+	hitbox.h = 16 * scale;
 }
 
 Atar::~Atar() {
@@ -111,5 +116,11 @@ void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
 			animationState = !animationState;
 		}
 	}
+	hitbox.x = position.x - (8 * scale);
+	hitbox.y = position.y - (8 * scale);
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
+}
+
+SDL_Rect Atar::GetHitbox() {
+	return hitbox;
 }

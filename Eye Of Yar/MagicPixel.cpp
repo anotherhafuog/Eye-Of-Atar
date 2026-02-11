@@ -10,6 +10,11 @@ MagicPixel::MagicPixel() {
 	scale = 8;
 	angle = 0;
 	color = colorTable[0];
+
+	hitbox.x = position.x - (2 * scale);
+	hitbox.y = position.y - scale;
+	hitbox.w = scale * 4;
+	hitbox.h = scale * 2;
 }
 
 MagicPixel::~MagicPixel() {
@@ -37,5 +42,12 @@ void MagicPixel::Update(int frameCount, int speed, SDL_Point atarPos) {
 	else {
 		position.y -= speed;
 	}
+
+	hitbox.x = position.x - (2 * scale);
+	hitbox.y = position.y - scale;
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
+}
+
+SDL_Rect MagicPixel::GetHitbox() {
+	return hitbox;
 }

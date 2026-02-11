@@ -17,12 +17,14 @@ private:
 		{255,255,0,128}, //yellow
 		{255,255,255,128} //white
 	};
+	SDL_Rect hitbox;
 public:
 	MagicPixel();
 
 	~MagicPixel();
 
 	void Update(int, int, SDL_Point);
+	SDL_Rect GetHitbox();
 };
 
 #endif
