@@ -19,7 +19,7 @@ public:
 
 	void Update(int, const bool pressed[SDL_NUM_SCANCODES]);
 
-	SDL_Rect GetHitbox();
+	const SDL_Rect* getHitbox();
 };
 
 #endif

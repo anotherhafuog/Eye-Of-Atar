@@ -48,6 +48,6 @@ void MagicPixel::Update(int frameCount, int speed, SDL_Point atarPos) {
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
 }
 
-SDL_Rect MagicPixel::GetHitbox() {
-	return hitbox;
+const SDL_Rect* MagicPixel::getHitbox() {
+	return &hitbox;
 }

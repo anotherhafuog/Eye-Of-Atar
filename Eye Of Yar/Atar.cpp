@@ -121,6 +121,6 @@ void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
 }
 
-SDL_Rect Atar::GetHitbox() {
-	return hitbox;
+const SDL_Rect* Atar::getHitbox() {
+	return &hitbox;
 }

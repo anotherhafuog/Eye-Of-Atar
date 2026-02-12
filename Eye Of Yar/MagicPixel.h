@@ -24,7 +24,7 @@ public:
 	~MagicPixel();
 
 	void Update(int, int, SDL_Point);
-	SDL_Rect GetHitbox();
+	const SDL_Rect* getHitbox();
 };
 
 #endif

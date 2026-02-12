@@ -27,7 +27,8 @@ int main() {
 		SELECT,
 		GAME,
 		DEATH,
-		WIN
+		WIN,
+		GAMEOVER
 	};
 	GameState state = GameState::SELECT;
 
@@ -78,6 +79,9 @@ int main() {
 						//make bad noise when i have sound
 					}
 				}
+				else if (state == GameState::DEATH) {
+					//wait for input then reset to initial game state
+				}
 				break;
 
 			case SDL_KEYUP:
@@ -123,6 +127,11 @@ int main() {
 				bonus -= 10;
 			}//decrement bonus
 
+			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
+				cout << "colliding\n";
+				state = GameState::DEATH;
+			} //to test death screen for now
+
 			renderFrame();
 			clearScreen();
 			++frameCount;
@@ -130,6 +139,62 @@ int main() {
 			if (elapsed < 16) {
 				SDL_Delay(16 - elapsed);
 			}//render frame and update counters
+		}
+		else if (state == GameState::DEATH) {
+			SDL_Point explosionPos = gameAtar.getPosition();
+			unsigned int animationCounter = 0;
+			struct{
+				vector<SDL_Point> localPts = { {-2,0}, {2,0}, {0,2}, {0,-2}, {-1,1}, {1,-1}, {1,1}, {-1,-1} };//temporary
+				vector<SDL_Point> worldPts;
+				vector<int> indices = { 0,1,2,3,4,5,6,7 };
+				int ptCt = 8;
+				int indCt = 8;
+				SDL_Point center = { 0,0 };
+				float scale = 1;
+				float angle = 0;
+				SDL_Color color = { 255,255,255,255 };
+			}explosion;
+			explosion.center = gameAtar.getPosition();
+			if (animationCounter < 300) {
+				Uint32 start = SDL_GetTicks();//for frame update
+
+				transformPoints(explosion.localPts,explosion.worldPts,explosion.ptCt,explosion.center,explosion.scale, explosion.angle);
+				drawVectorPic(explosion.worldPts, explosion.indices, explosion.indCt, explosion.color);
+
+				if (animationCounter % 10) {
+					explosion.scale++;
+				}
+
+				gameEyeball.Render();
+
+				gameEyelid.Update();
+				gameEyelid.Render();
+
+				gameGamma.Update();
+				gameGamma.Render();
+
+				//display hiscore, score, bonus, lives
+
+				printString(std::to_string(hiScore), { 100, 100 }, { 0, 0, 255, 128 }, 4);
+				printString(std::to_string(score), { 2290, 100 }, { 0, 0, 255, 128 }, 4);
+				printString(std::to_string(bonus), { 2290, 200 }, { 255, 255, 0, 128 }, 4);
+				printString(std::to_string(lives), { 2290, 1340 }, { 0, 0, 255, 128 }, 4);
+
+				++animationCounter;
+
+				renderFrame();
+				clearScreen();
+				++frameCount;
+				Uint32 elapsed = SDL_GetTicks() - start;
+				if (elapsed < 16) {
+					SDL_Delay(16 - elapsed);
+				}//render frame and update counters
+			}
+
+			--lives;
+			printChar(char('0' + score), { 1400, 400 }, { 0, 0, 255, 128 }, 8); //ask for score
+			printChar(char('0' + lives), { 1600, 450 }, { 0, 0, 255, 128 }, 8); //ask for lives
+
 		}
 	}
 		killRender();
