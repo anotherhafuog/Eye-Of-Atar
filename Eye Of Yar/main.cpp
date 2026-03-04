@@ -50,6 +50,7 @@ struct Explosion {
 	SDL_Point center;
 	float scale;
 	float angle;
+	Uint8 transparency;
 	SDL_Color color;
 };
 
@@ -67,7 +68,8 @@ void deathInit(SDL_Point atarPos) {
 	explosion.center = atarPos;
 	explosion.scale = 1.0;
 	explosion.angle = M_PI / 6;
-	explosion.color = { 255,255,255,255 };
+	explosion.transparency = 255;
+	explosion.color = { 255,255,255,explosion.transparency };
 
 	deathAnimCounter = 0;
 	--lives;   // happens ONCE
@@ -202,6 +204,7 @@ int main() {
 				printString(std::to_string(bonus), { 2290, 200 }, { 255, 255, 0, 128 }, 4);
 				printString(std::to_string(lives), { 2290, 1340 }, { 0, 0, 255, 128 }, 4);
 
+				explosion.color = {255, 255, 255, --explosion.transparency};
 				++deathAnimCounter;
 
 				renderFrame();
