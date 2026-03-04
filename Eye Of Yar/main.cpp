@@ -11,38 +11,71 @@
 
 using namespace std;
 
+static int frameCount = 0;
+static int gameSpeed = 1;
+struct InputState {
+	bool quit = 0;
+	bool held[SDL_NUM_SCANCODES];
+};
+
+InputState input = {};
+enum class GameState {
+	SELECT,
+	GAME,
+	DEATH,
+	WIN,
+	GAMEOVER
+};
+GameState state = GameState::SELECT;
+
+Eyeball gameEyeball;
+Eyelid gameEyelid;
+Atar gameAtar;
+GammaField gameGamma(gameSpeed);
+MagicPixel gamePixel;
+
+int score = 0;
+int hiScore = 10000;
+int bonus = 3000;
+int lives = 4;
+bool dead = false;
+
+//death defines
+struct Explosion {
+	std::vector<SDL_Point> localPts;
+	std::vector<SDL_Point> worldPts;
+	std::vector<int> indices;
+	int ptCt;
+	int indCt;
+	SDL_Point center;
+	float scale;
+	float angle;
+	SDL_Color color;
+};
+
+Explosion explosion;
+unsigned int deathAnimCounter = 0;
+
+void deathInit(SDL_Point atarPos) {
+	explosion.localPts = {
+		{-2,0},{2,0},{0,2},{0,-2},
+		{-1,1},{1,-1},{1,1},{-1,-1}
+	};
+	explosion.indices = { 0,1,2,3,4,5,6,7 };
+	explosion.ptCt = 8;
+	explosion.indCt = 8;
+	explosion.center = atarPos;
+	explosion.scale = 1.0;
+	explosion.angle = M_PI / 6;
+	explosion.color = { 255,255,255,255 };
+
+	deathAnimCounter = 0;
+	--lives;   // happens ONCE
+}
+
 int main() {
 
 	initWindow(2560, 1440, SDL_WINDOW_FULLSCREEN_DESKTOP, 4.0);
-
-	static int frameCount = 0;
-	static int gameSpeed = 1;
-	struct InputState {
-		bool quit = 0;
-		bool held[SDL_NUM_SCANCODES];
-	};
-
-	InputState input = {};
-	enum class GameState {
-		SELECT,
-		GAME,
-		DEATH,
-		WIN,
-		GAMEOVER
-	};
-	GameState state = GameState::SELECT;
-
-	Eyeball gameEyeball;
-	Eyelid gameEyelid;
-	Atar gameAtar;
-	GammaField gameGamma(gameSpeed);
-	MagicPixel gamePixel;
-
-	int score = 0;
-	int hiScore = 10000;
-	int bonus = 3000;
-	int lives = 4;
-	bool dead = false;
 
 	//game loop
 	while (!input.quit) {
@@ -81,6 +114,7 @@ int main() {
 				}
 				else if (state == GameState::DEATH) {
 					//wait for input then reset to initial game state
+					
 				}
 				break;
 
@@ -129,39 +163,27 @@ int main() {
 
 			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
 				cout << "colliding\n";
+				deathInit(gameAtar.getPosition());
 				state = GameState::DEATH;
 			} //to test death screen for now
 
 			renderFrame();
 			clearScreen();
-			++frameCount;
+			frameCount = (frameCount + 1) % 60;
 			Uint32 elapsed = SDL_GetTicks() - start;
 			if (elapsed < 16) {
 				SDL_Delay(16 - elapsed);
 			}//render frame and update counters
 		}
 		else if (state == GameState::DEATH) {
-			SDL_Point explosionPos = gameAtar.getPosition();
-			unsigned int animationCounter = 0;
-			struct{
-				vector<SDL_Point> localPts = { {-2,0}, {2,0}, {0,2}, {0,-2}, {-1,1}, {1,-1}, {1,1}, {-1,-1} };//temporary
-				vector<SDL_Point> worldPts;
-				vector<int> indices = { 0,1,2,3,4,5,6,7 };
-				int ptCt = 8;
-				int indCt = 8;
-				SDL_Point center = { 0,0 };
-				float scale = 1;
-				float angle = 0;
-				SDL_Color color = { 255,255,255,255 };
-			}explosion;
-			explosion.center = gameAtar.getPosition();
-			if (animationCounter < 300) {
+			
+			if (deathAnimCounter < 200) {
 				Uint32 start = SDL_GetTicks();//for frame update
 
 				transformPoints(explosion.localPts,explosion.worldPts,explosion.ptCt,explosion.center,explosion.scale, explosion.angle);
 				drawVectorPic(explosion.worldPts, explosion.indices, explosion.indCt, explosion.color);
 
-				if (animationCounter % 10) {
+				if (deathAnimCounter % 10) {
 					explosion.scale++;
 				}
 
@@ -180,23 +202,26 @@ int main() {
 				printString(std::to_string(bonus), { 2290, 200 }, { 255, 255, 0, 128 }, 4);
 				printString(std::to_string(lives), { 2290, 1340 }, { 0, 0, 255, 128 }, 4);
 
-				++animationCounter;
+				++deathAnimCounter;
 
 				renderFrame();
 				clearScreen();
-				++frameCount;
+				frameCount = (frameCount + 1) % 60;
 				Uint32 elapsed = SDL_GetTicks() - start;
 				if (elapsed < 16) {
 					SDL_Delay(16 - elapsed);
 				}//render frame and update counters
 			}
-
-			--lives;
-			printChar(char('0' + score), { 1400, 400 }, { 0, 0, 255, 128 }, 8); //ask for score
-			printChar(char('0' + lives), { 1600, 450 }, { 0, 0, 255, 128 }, 8); //ask for lives
+			else {
+				clearScreen();
+				printString(std::to_string(score), { 1600, 600 }, { 0, 0, 255, 128 }, 8);
+				printString(std::to_string(lives), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
+				renderFrame();
+			}
 
 		}
 	}
 		killRender();
 		return EXIT_SUCCESS;
 }
+
