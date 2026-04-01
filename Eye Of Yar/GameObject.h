@@ -15,6 +15,16 @@ class GameEntity {
 			scale = 0;
 			angle = 0;
 			color = { 0, 0, 0, 0 };
+
+			//setting defaults
+			DvectorData = vectorData;
+			Dposition = position;
+			Dindices = indices;
+			DvertCt = vertCt;
+			DindiceCt = indiceCt;
+			Dscale = scale;
+			Dangle = angle;
+			Dcolor = color;
 		}
 
 		GameEntity(std::vector<SDL_Point> entData, SDL_Point entPos, std::vector<int> entInd, int entvCt, int entiCt, float entSc, float entAng, SDL_Color entColor) {
@@ -25,10 +35,23 @@ class GameEntity {
 			scale = entSc;
 			angle = entAng;
 			color = entColor;
+
+			//setting defaults
 		}
 
 		~GameEntity() {
 
+		}
+
+		void reset() {
+			vectorData = DvectorData;
+			position = Dposition;
+			indices = Dindices;
+			vertCt = DvertCt;
+			indiceCt = DindiceCt;
+			scale = Dscale;
+			angle = Dangle;
+			color = Dcolor;
 		}
 
 		inline SDL_Point getPosition() {
@@ -65,6 +88,16 @@ class GameEntity {
 		float scale;
 		float angle;
 		SDL_Color color;
+
+		//defaults for resetting
+		std::vector<SDL_Point> DvectorData;
+		SDL_Point Dposition;
+		std::vector<int> Dindices;
+		int DvertCt;
+		int DindiceCt;
+		float Dscale;
+		float Dangle;
+		SDL_Color Dcolor;
 };
 
 #endif

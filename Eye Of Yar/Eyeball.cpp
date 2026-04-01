@@ -10,6 +10,16 @@ Eyeball::Eyeball() {
 	scale = 16;
 	angle = 0;
 	color = { 255, 255, 0, 255 };
+
+	//setting defaults
+	DvectorData = vectorData;
+	Dposition = position;
+	Dindices = indices;
+	DvertCt = vertCt;
+	DindiceCt = indiceCt;
+	Dscale = scale;
+	Dangle = angle;
+	Dcolor = color;
 }
 
 Eyeball::~Eyeball() {

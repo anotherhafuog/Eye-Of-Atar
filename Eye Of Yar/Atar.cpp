@@ -40,6 +40,16 @@ Atar::Atar() {
 	hitbox.y = position.y - (8 * scale);
 	hitbox.w = 16 * scale;
 	hitbox.h = 16 * scale;
+
+	//setting defaults (prob simpler way for this but whatevs)
+	DvectorData = vectorData;
+	Dposition = position;
+	Dindices = indices;
+	DvertCt = vertCt;
+	DindiceCt = indiceCt;
+	Dscale = scale;
+	Dangle = angle;
+	Dcolor = color;
 }
 
 Atar::~Atar() {

@@ -15,6 +15,16 @@ MagicPixel::MagicPixel() {
 	hitbox.y = position.y - scale;
 	hitbox.w = scale * 4;
 	hitbox.h = scale * 2;
+
+	//setting defaults
+	DvectorData = vectorData;
+	Dposition = position;
+	Dindices = indices;
+	DvertCt = vertCt;
+	DindiceCt = indiceCt;
+	Dscale = scale;
+	Dangle = angle;
+	Dcolor = color;
 }
 
 MagicPixel::~MagicPixel() {
@@ -23,7 +33,7 @@ MagicPixel::~MagicPixel() {
 
 void MagicPixel::Update(int frameCount, int speed, SDL_Point atarPos) {
 	static int i = 0;
-	if (i > 7) {
+	if (i > 6) {
 		i = 0;
 	}
 	else {

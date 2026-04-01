@@ -116,7 +116,14 @@ int main() {
 				}
 				else if (state == GameState::DEATH) {
 					//wait for input then reset to initial game state
-					
+					if (deathAnimCounter >= 200) {
+						if (sc == SDL_SCANCODE_SPACE) {
+							gameAtar.reset();
+							gamePixel.reset();
+							gameEyeball.reset();
+							state = GameState::GAME;
+						}
+					}
 				}
 				break;
 
@@ -164,7 +171,6 @@ int main() {
 			}//decrement bonus
 
 			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
-				cout << "colliding\n";
 				deathInit(gameAtar.getPosition());
 				state = GameState::DEATH;
 			} //to test death screen for now
@@ -221,7 +227,6 @@ int main() {
 				printString(std::to_string(lives), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
 				renderFrame();
 			}
-
 		}
 	}
 		killRender();
