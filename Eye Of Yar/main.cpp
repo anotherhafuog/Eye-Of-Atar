@@ -20,6 +20,7 @@ struct InputState {
 
 InputState input = {};
 enum class GameState {
+	TITLE,
 	SELECT,
 	GAME,
 	DEATH,
@@ -37,7 +38,7 @@ MagicPixel gamePixel;
 int score = 0;
 int hiScore = 10000;
 int bonus = 3000;
-int lives = 4;
+int lives = 3;
 bool dead = false;
 
 //death defines
@@ -72,7 +73,7 @@ void deathInit(SDL_Point atarPos) {
 	explosion.color = { 255,255,255,explosion.transparency };
 
 	deathAnimCounter = 0;
-	--lives;   // happens ONCE
+	
 }
 
 int main() {
@@ -118,6 +119,7 @@ int main() {
 					//wait for input then reset to initial game state
 					if (deathAnimCounter >= 200) {
 						if (sc == SDL_SCANCODE_SPACE) {
+							--lives; //should happen once
 							gameAtar.reset();
 							gamePixel.reset();
 							gameEyeball.reset();
@@ -173,7 +175,7 @@ int main() {
 			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
 				deathInit(gameAtar.getPosition());
 				state = GameState::DEATH;
-			} //to test death screen for now
+			} //hard coded to test death screen for now
 
 			renderFrame();
 			clearScreen();
@@ -221,11 +223,40 @@ int main() {
 					SDL_Delay(16 - elapsed);
 				}//render frame and update counters
 			}
+			else if (lives-1 == -1) {
+				deathAnimCounter = 0;
+				state = GameState::GAMEOVER;
+			}
 			else {
 				clearScreen();
 				printString(std::to_string(score), { 1600, 600 }, { 0, 0, 255, 128 }, 8);
-				printString(std::to_string(lives), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
+				printString(std::to_string(lives-1), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
 				renderFrame();
+			}
+		}
+		else if (state == GameState::GAMEOVER) {
+			if (deathAnimCounter < 300) {
+				Uint32 start = SDL_GetTicks();//for frame update
+				
+				printString("GAME OVER", { 928,672 }, { 255, 0, 0, 255 }, 8);
+				renderFrame();
+				clearScreen();
+
+				++deathAnimCounter;
+				Uint32 elapsed = SDL_GetTicks() - start;
+				if (elapsed < 16) {
+					SDL_Delay(16 - elapsed);
+				}//render frame and update counters
+			} //wait for 5 seconds without impeding ability to exit game
+			else {
+				lives = 3;
+				score = 0;
+				bonus = 3000;
+				gameAtar.reset();
+				gamePixel.reset();
+				gameEyeball.reset();
+				clearScreen();
+				state = GameState::SELECT;
 			}
 		}
 	}
