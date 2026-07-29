@@ -8,6 +8,7 @@
 #include "Atar.h"
 #include "GammaField.h"
 #include "MagicPixel.h"
+#include "ShieldSeg.h"
 
 using namespace std;
 
@@ -27,13 +28,14 @@ enum class GameState {
 	WIN,
 	GAMEOVER
 };
-GameState state = GameState::SELECT;
+GameState state = GameState::TITLE;
 
 Eyeball gameEyeball;
 Eyelid gameEyelid;
 Atar gameAtar;
 GammaField gameGamma(gameSpeed);
 MagicPixel gamePixel;
+ShieldSeg testSeg;
 
 int score = 0;
 int hiScore = 10000;
@@ -94,7 +96,12 @@ int main() {
 				if (!event.key.repeat) {  // avoid multiple repeats
 					input.held[sc] = true;
 				}
-				if (state == GameState::SELECT) {
+				if (state == GameState::TITLE) {
+					if (sc == SDL_SCANCODE_SPACE) {
+						state = GameState::SELECT;
+					}
+				}
+				else if (state == GameState::SELECT) {
 					if (sc >= SDL_SCANCODE_1 && sc <= SDL_SCANCODE_5) {
 						gameSpeed = (sc - SDL_SCANCODE_1) + 1;
 						printChar(char('0' + gameSpeed), { 1600, 450 }, { 0, 0, 255, 128 }, 8); //ask for speed
@@ -123,6 +130,7 @@ int main() {
 							gameAtar.reset();
 							gamePixel.reset();
 							gameEyeball.reset();
+							testSeg.reset();
 							state = GameState::GAME;
 						}
 					}
@@ -135,8 +143,17 @@ int main() {
 			}
 		}
 
+		if (state == GameState::TITLE) {
+			if (deathAnimCounter == 0) {
+				printString("EYE OF ATAR", { 848,570 }, { 255, 255, 255, 255 }, 8);
+				printString("MMXXVI PROMETHEUS", { 944,1224 }, { 0, 0, 255, 64 }, 4);
+				renderFrame();
+				deathAnimCounter = 1;
+			}
+		}
+
 		//speed select (wip very rudimentary now)
-		if (state == GameState::SELECT) {
+		else if (state == GameState::SELECT) {
 			printChar('?', { 1600, 450 }, { 0, 0, 255, 128 }, 8); //ask for speed
 			renderFrame();
 			clearScreen();
@@ -161,6 +178,9 @@ int main() {
 			gamePixel.Update(frameCount, gameSpeed, gameAtar.getPosition());
 			gamePixel.Render();
 
+			testSeg.Update();
+			testSeg.Render();
+
 			//display hiscore, score, bonus, lives, and update bonus
 
 			printString(std::to_string(hiScore), { 100, 100 }, { 0, 0, 255, 128 }, 4);
@@ -174,8 +194,13 @@ int main() {
 
 			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
 				deathInit(gameAtar.getPosition());
+				deathAnimCounter = 0;
 				state = GameState::DEATH;
 			} //hard coded to test death screen for now
+
+			if (SDL_HasIntersection(gameAtar.getHitbox(), testSeg.getHitbox())) {
+
+			}//todo: test fun collision
 
 			renderFrame();
 			clearScreen();
@@ -205,6 +230,7 @@ int main() {
 				gameGamma.Update();
 				gameGamma.Render();
 
+				testSeg.Render();
 				//display hiscore, score, bonus, lives
 
 				printString(std::to_string(hiScore), { 100, 100 }, { 0, 0, 255, 128 }, 4);
@@ -255,8 +281,10 @@ int main() {
 				gameAtar.reset();
 				gamePixel.reset();
 				gameEyeball.reset();
+				testSeg.reset();
 				clearScreen();
-				state = GameState::SELECT;
+				deathAnimCounter = 0;
+				state = GameState::TITLE;
 			}
 		}
 	}

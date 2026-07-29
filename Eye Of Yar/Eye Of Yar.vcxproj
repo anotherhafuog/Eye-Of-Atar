@@ -141,6 +141,7 @@
     <ClCompile Include="GammaRing.cpp" />
     <ClCompile Include="MagicPixel.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ShieldSeg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Atar.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="GammaField.h" />
     <ClInclude Include="GammaRing.h" />
     <ClInclude Include="MagicPixel.h" />
+    <ClInclude Include="ShieldSeg.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

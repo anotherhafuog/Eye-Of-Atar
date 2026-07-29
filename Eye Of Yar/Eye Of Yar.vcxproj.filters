@@ -39,6 +39,9 @@
     <ClCompile Include="MagicPixel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShieldSeg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="drawFunctions.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MagicPixel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldSeg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
