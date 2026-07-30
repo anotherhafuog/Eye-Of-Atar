@@ -56,7 +56,7 @@ Atar::~Atar() {
 
 }
 
-void Atar::Move(SDL_Point pointMod) {
+void Atar::addPosition(SDL_Point pointMod) {
 	position.x += pointMod.x;
 	position.y += pointMod.y;
 }

@@ -192,11 +192,11 @@ int main() {
 				bonus -= 10;
 			}//decrement bonus
 
-			/*if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
+			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
 				deathInit(gameAtar.getPosition());
 				deathAnimCounter = 0;
 				state = GameState::DEATH;
-			} //hard coded to test death screen for now*/
+			} //hard coded to test death screen for now
 
 			if (SDL_HasIntersection(gameAtar.getHitbox(), testSeg.getHitbox())) {
 				SDL_Point atarPos = gameAtar.getPosition();
@@ -206,7 +206,7 @@ int main() {
 				float length = sqrt(dx * dx + dy * dy);
 				float ux = dx / length;
 				float uy = dy / length;
-				gameAtar.Move({ (int)ux * 100, (int)uy * 100 });
+				gameAtar.addPosition({ static_cast<int>(std::lround(ux * 16)), static_cast<int>(std::lround(uy * 16)) }); //may increase bump distance later
 			}//todo: test fun collision
 
 			renderFrame();
