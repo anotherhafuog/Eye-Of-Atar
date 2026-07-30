@@ -192,14 +192,21 @@ int main() {
 				bonus -= 10;
 			}//decrement bonus
 
-			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
+			/*if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
 				deathInit(gameAtar.getPosition());
 				deathAnimCounter = 0;
 				state = GameState::DEATH;
-			} //hard coded to test death screen for now
+			} //hard coded to test death screen for now*/
 
 			if (SDL_HasIntersection(gameAtar.getHitbox(), testSeg.getHitbox())) {
-
+				SDL_Point atarPos = gameAtar.getPosition();
+				SDL_Point eyePos = { 1280, 720 }; //I dont wanna call getPos!
+				int dx = atarPos.x - eyePos.x;
+				int dy = atarPos.y - eyePos.y;
+				float length = sqrt(dx * dx + dy * dy);
+				float ux = dx / length;
+				float uy = dy / length;
+				gameAtar.Move({ (int)ux * 100, (int)uy * 100 });
 			}//todo: test fun collision
 
 			renderFrame();

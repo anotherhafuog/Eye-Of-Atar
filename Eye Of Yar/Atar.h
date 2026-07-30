@@ -17,6 +17,8 @@ public:
 
 	~Atar();
 
+	void Move(SDL_Point);
+
 	void Update(int, const bool pressed[SDL_NUM_SCANCODES]);
 
 	const SDL_Rect* getHitbox();

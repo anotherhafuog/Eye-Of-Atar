@@ -56,6 +56,11 @@ Atar::~Atar() {
 
 }
 
+void Atar::Move(SDL_Point pointMod) {
+	position.x += pointMod.x;
+	position.y += pointMod.y;
+}
+
 void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
 	int speed = 10;
 	bool noInput = false;
