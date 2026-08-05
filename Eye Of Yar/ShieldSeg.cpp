@@ -31,6 +31,12 @@ ShieldSeg::~ShieldSeg() {
 
 }
 
+void ShieldSeg::isHit() {
+	color = { 0, 0, 0, 0 };
+	hitbox.w = 0;
+	hitbox.h = 0;
+}
+
 const SDL_Rect* ShieldSeg::getHitbox() {
 	return &hitbox;
 }

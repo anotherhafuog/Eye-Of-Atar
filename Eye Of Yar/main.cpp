@@ -200,13 +200,13 @@ int main() {
 
 			if (SDL_HasIntersection(gameAtar.getHitbox(), testSeg.getHitbox())) {
 				SDL_Point atarPos = gameAtar.getPosition();
-				SDL_Point eyePos = { 1280, 720 }; //I dont wanna call getPos!
+				SDL_Point eyePos = { 1280, 720 }; //I dont feel like calling getPos!
 				int dx = atarPos.x - eyePos.x;
 				int dy = atarPos.y - eyePos.y;
 				float length = sqrt(dx * dx + dy * dy);
 				float ux = dx / length;
 				float uy = dy / length;
-				gameAtar.addPosition({ static_cast<int>(std::lround(ux * 16)), static_cast<int>(std::lround(uy * 16)) }); //may increase bump distance later
+				gameAtar.addPosition({ static_cast<int>(std::lround(ux * 32)), static_cast<int>(std::lround(uy * 32)) }); //may increase bump distance later
 			}//todo: test fun collision
 
 			renderFrame();

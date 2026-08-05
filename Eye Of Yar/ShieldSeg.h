@@ -8,10 +8,13 @@
 class ShieldSeg : public GameEntity {
 private:
 	SDL_Rect hitbox;
+
 public:
 	ShieldSeg();
 
 	~ShieldSeg();
+
+	void isHit();
 
 	const SDL_Rect* getHitbox();
 };
