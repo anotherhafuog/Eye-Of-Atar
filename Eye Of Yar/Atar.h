@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <vector>
 #include <cmath>
+#include <algorithm>
 #include "drawFunctions.h"
 #include "GameObject.h"
 

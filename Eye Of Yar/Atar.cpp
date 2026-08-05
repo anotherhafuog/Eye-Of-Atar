@@ -19,7 +19,7 @@ Atar::Atar() {
 		{7,1}, {10,4}, {8,8}, {2,1} /*wing right*/
 	};
 	vectorData = flapDown;
-	position = { 200,720 };
+	position = { 450,720 };
 	indices = 
 	{	0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 0, /*head*/
 		8, 6, 8, 9, 9, 5, /*body*/
@@ -131,6 +131,10 @@ void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
 			animationState = !animationState;
 		}
 	}
+	// Stop player from going past screen edges
+	position.x = std::clamp(static_cast<float>(position.x),  320 + (8 * scale), 2240 - 8 * scale);
+	position.y = std::clamp(static_cast<float>(position.y), 8 * scale, 1440 - 8 * scale);
+
 	hitbox.x = position.x - (8 * scale);
 	hitbox.y = position.y - (8 * scale);
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);

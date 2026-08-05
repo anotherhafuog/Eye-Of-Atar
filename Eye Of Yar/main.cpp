@@ -188,9 +188,15 @@ int main() {
 			printString(std::to_string(bonus), { 2290, 200 }, { 255, 255, 0, 128 }, 4);
 			printString(std::to_string(lives), { 2290, 1340 }, { 0, 0, 255, 128 }, 4);
 
+			//draw screen edges
+
+			drawVectorPic({ {320,0}, {2240, 0}, {2240, 1440}, {320,1440} }, { 0,3,1,2 }, 4, { 0,0,255,32 });
+
 			if ((bonus != 0 && frameCount % 10 == 0)) {
 				bonus -= 10;
 			}//decrement bonus
+
+			//Collision section: (need to create better handler eventually)
 
 			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
 				deathInit(gameAtar.getPosition());
