@@ -132,8 +132,8 @@ void Atar::Update(int frameCount, const bool pressed[SDL_NUM_SCANCODES]) {
 		}
 	}
 	// Stop player from going past screen edges
-	position.x = std::clamp(static_cast<float>(position.x),  320 + (8 * scale), 2240 - 8 * scale);
-	position.y = std::clamp(static_cast<float>(position.y), 8 * scale, 1440 - 8 * scale);
+	position.x = std::clamp(static_cast<float>(position.x),  328 + (8 * scale), 2232 - 8 * scale);
+	position.y = std::clamp(static_cast<float>(position.y), 8 + (8 * scale), 1432 - 8 * scale); //constants are small offsets to prevent slight out of bounds movement
 
 	hitbox.x = position.x - (8 * scale);
 	hitbox.y = position.y - (8 * scale);
