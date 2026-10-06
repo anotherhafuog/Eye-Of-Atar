@@ -198,7 +198,12 @@ int main() {
 
 			//Collision section: (need to create better handler eventually)
 
-			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox())) {
+			SDL_Point tempCheck = gameAtar.getPosition();
+			float dx = tempCheck.x - 1280;
+			float dy = tempCheck.y - 720;
+			float d2 = dx * dx + dy * dy;
+
+			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox()) && !(d2 >= (375 * 375) && d2 <= (675 * 675))) {
 				deathInit(gameAtar.getPosition());
 				deathAnimCounter = 0;
 				state = GameState::DEATH;
