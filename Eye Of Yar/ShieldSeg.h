@@ -8,6 +8,8 @@
 class ShieldSeg : public GameEntity {
 private:
 	SDL_Rect hitbox;
+	int ptGain;
+	bool alive;
 
 public:
 	ShieldSeg(Uint8 brightness);
@@ -17,6 +19,13 @@ public:
 	void isHit();
 
 	const SDL_Rect* getHitbox();
+
+	void Update();
+
+	bool isAlive() const { return alive; }
+
+	int getPoints() const { return ptGain; }
+
 };
 
 #endif

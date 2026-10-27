@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Atar.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="drawFunctions.cpp" />
     <ClCompile Include="Eyeball.cpp" />
     <ClCompile Include="Eyelid.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Atar.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="drawFunctions.h" />
     <ClInclude Include="Eyeball.h" />
     <ClInclude Include="Eyelid.h" />

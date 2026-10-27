@@ -42,6 +42,7 @@ int hiScore = 10000;
 int bonus = 3000;
 int lives = 3;
 bool dead = false;
+string atarDirection;
 
 //death defines
 struct Explosion {
@@ -163,7 +164,7 @@ int main() {
 		else if (state == GameState::GAME){
 			Uint32 start = SDL_GetTicks();//for frame update
 			//update things
-			gameAtar.Update(frameCount, input.held);
+			gameAtar.Update(frameCount, atarDirection, input.held);
 			gameAtar.Render();
 
 			gameEyeball.Update(frameCount, gameAtar.getPosition());

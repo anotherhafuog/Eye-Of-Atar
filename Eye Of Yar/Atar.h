@@ -13,6 +13,7 @@ private:
 	std::vector<SDL_Point> flapDown;
 	std::vector<SDL_Point> flapUp;
 	SDL_Rect hitbox;
+	string direction = "up";
 public:
 	Atar();
 
@@ -20,7 +21,7 @@ public:
 
 	void addPosition(SDL_Point);
 
-	void Update(int, const bool pressed[SDL_NUM_SCANCODES]);
+	void Update(int, string &retDirection, const bool pressed[SDL_NUM_SCANCODES]);
 
 	const SDL_Rect* getHitbox();
 };

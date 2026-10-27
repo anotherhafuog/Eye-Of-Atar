@@ -25,7 +25,12 @@ ShieldSeg::ShieldSeg(Uint8 brightness) {
 	Dscale = scale;
 	Dangle = angle;
 	Dcolor = color;
-	int ptGain = 10 + ((brightness * 3) >> 8) * 20;
+	
+
+	// brightness <= 85 -> 10 pts, 86..170 -> 30 pts, 171..255 -> 50 pts
+	ptGain = 10 + ((brightness * 3) >> 8) * 20;
+	alive = true;
+
 }
 
 ShieldSeg::~ShieldSeg() {
@@ -36,8 +41,16 @@ void ShieldSeg::isHit() {
 	color = { 0, 0, 0, 0 };
 	hitbox.w = 0;
 	hitbox.h = 0;
+	alive = false;
 }
 
 const SDL_Rect* ShieldSeg::getHitbox() {
 	return &hitbox;
+}
+
+
+void ShieldSeg::Update() {
+	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
+	hitbox.x = position.x - (6 * scale);
+	hitbox.y = position.y - (6 * scale);
 }
