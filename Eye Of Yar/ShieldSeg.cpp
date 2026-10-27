@@ -1,7 +1,7 @@
 #include "ShieldSeg.h"
 using namespace std;
 
-ShieldSeg::ShieldSeg() {
+ShieldSeg::ShieldSeg(Uint8 brightness) {
 	vectorData = { {0,10}, {-8,5}, {-8,-5}, {0,-10}, {8, -5}, {8,5} };
 	position = { 1280,1000 };
 	indices = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 0 };
@@ -9,7 +9,7 @@ ShieldSeg::ShieldSeg() {
 	indiceCt = 12;
 	scale = 2;
 	angle = 0;
-	color = { 0,255,255,128 }, //cyan
+	color = { 0,255,255,brightness }, //cyan
 
 	hitbox.x = position.x - (6 * scale);
 	hitbox.y = position.y - (6 * scale);
@@ -25,6 +25,7 @@ ShieldSeg::ShieldSeg() {
 	Dscale = scale;
 	Dangle = angle;
 	Dcolor = color;
+	int ptGain = 10 + ((brightness * 3) >> 8) * 20;
 }
 
 ShieldSeg::~ShieldSeg() {

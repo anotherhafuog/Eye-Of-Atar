@@ -35,7 +35,7 @@ Eyelid gameEyelid;
 Atar gameAtar;
 GammaField gameGamma(gameSpeed);
 MagicPixel gamePixel;
-ShieldSeg testSeg;
+ShieldSeg testSeg(43); //43, 128, 213
 
 int score = 0;
 int hiScore = 10000;

@@ -10,7 +10,7 @@ private:
 	SDL_Rect hitbox;
 
 public:
-	ShieldSeg();
+	ShieldSeg(Uint8 brightness);
 
 	~ShieldSeg();
 
