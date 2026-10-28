@@ -40,6 +40,7 @@ Atar::Atar() {
 	hitbox.y = position.y - (8 * scale);
 	hitbox.w = 16 * scale;
 	hitbox.h = 16 * scale;
+	//direction = (M_PI / 2); //used by bullet
 
 	//setting defaults (prob simpler way for this but whatevs)
 	DvectorData = vectorData;
@@ -61,58 +62,52 @@ void Atar::addPosition(SDL_Point pointMod) {
 	position.y += pointMod.y;
 }
 
-void Atar::Update(int frameCount, string &retdirection, const bool pressed[SDL_NUM_SCANCODES]) {
+void Atar::Update(int frameCount, float &retdirection, const bool pressed[SDL_NUM_SCANCODES]) {
 	int speed = 10;
 	bool noInput = false;
+	const int diag = (int)std::lround(speed * 0.7071);
+
 	if (pressed[SDL_SCANCODE_W]) {
 		if (pressed[SDL_SCANCODE_A]) {
 			angle = -M_PI / 4;
-			position.x -= speed;
-			position.y -= speed;
-			direction = "upleft";
+			position.x -= diag;
+			position.y -= diag;
 		}
-		else if (pressed[SDL_SCANCODE_D]) {
+		else if (pressed[SDL_SCANCODE_D]) { 
 			angle = M_PI / 4;
-			position.x += speed * .707;
-			position.y -= speed * .707;
-			direction = "upright";
+			position.x += diag;
+			position.y -= diag;
 		}
-		else{
+		else {
 			angle = 0;
 			position.y -= speed;
-			direction = "up";
 		}
-		
 	}
 	else if (pressed[SDL_SCANCODE_S]) {
 		if (pressed[SDL_SCANCODE_A]) {
-			angle = -3*M_PI / 4;
-			position.x -= speed *.707;
-			position.y += speed * .707;
-			direction = "downleft";
+			angle = -3 * M_PI / 4;
+			position.x -= diag;
+			position.y += diag;
 		}
 		else if (pressed[SDL_SCANCODE_D]) {
-			angle = 3*M_PI / 4;
-			position.x += speed * .707;
-			position.y += speed * .707;
-			direction = "downright";
+			angle = 3 * M_PI / 4;
+			position.x += diag;
+			position.y += diag;
 		}
 		else {
 			angle = M_PI;
 			position.y += speed;
-			direction = "down";
 		}
 	}
 	else if (pressed[SDL_SCANCODE_A]) {
 		angle = -M_PI / 2;
 		position.x -= speed;
-		direction = "left";
 	}
 	else if (pressed[SDL_SCANCODE_D]) {
 		angle = M_PI / 2;
 		position.x += speed;
-		direction = "right";
 	}
+
 	else {
 		noInput = true;
 	}
@@ -146,7 +141,7 @@ void Atar::Update(int frameCount, string &retdirection, const bool pressed[SDL_N
 	hitbox.x = position.x - (8 * scale);
 	hitbox.y = position.y - (8 * scale);
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
-	retdirection = direction;
+	retdirection = angle;
 }
 
 const SDL_Rect* Atar::getHitbox() {

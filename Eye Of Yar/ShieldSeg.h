@@ -10,13 +10,14 @@ private:
 	SDL_Rect hitbox;
 	int ptGain;
 	bool alive;
+	SDL_Rect Dhitbox;
 
 public:
 	ShieldSeg(Uint8 brightness);
 
 	~ShieldSeg();
 
-	void isHit();
+	void destroyed();
 
 	const SDL_Rect* getHitbox();
 
@@ -25,6 +26,8 @@ public:
 	bool isAlive() const { return alive; }
 
 	int getPoints() const { return ptGain; }
+
+	void reset();
 
 };
 

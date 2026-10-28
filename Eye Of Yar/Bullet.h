@@ -9,12 +9,14 @@ class Bullet : public GameEntity {
 private:
 	SDL_Rect hitbox;
 	bool isActive;
+	SDL_Point velocity;
+	int speed = 20;
 public:
 	Bullet();
 
 	~Bullet();
 
-	void Update(SDL_Point, string, const bool pressed[SDL_NUM_SCANCODES]); //uhh
+	void Update(SDL_Point, float, const bool pressed[SDL_NUM_SCANCODES]); //uhh
 	void Deactivate();
 	const SDL_Rect* getHitbox();
 };

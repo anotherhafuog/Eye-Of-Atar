@@ -9,7 +9,7 @@ Bullet::Bullet() {
 	indiceCt = 8;
 	scale = 2;
 	angle = 0;
-	color = { 255,255,255,255 };
+	color = { 0, 0, 0, 0 };
 
 	hitbox.x = position.x - scale;
 	hitbox.y = position.y - scale;
@@ -31,9 +31,23 @@ Bullet::~Bullet() {
 
 }
 
-void Bullet::Update(SDL_Point atarPos, string atarDir, const bool pressed[SDL_NUM_SCANCODES]) {
+void Bullet::Update(SDL_Point atarPos, float atarDir, const bool pressed[SDL_NUM_SCANCODES]) {
 	
-	if (pressed[SDL_SCANCODE_SPACE] && (isActive == false)) {
+	if (pressed[SDL_SCANCODE_SPACE] && !isActive) {
+		isActive = true;
+		position = atarPos;
+		velocity.x = (int)std::lround(std::sin(atarDir) * speed);
+		velocity.y = (int)std::lround(-std::cos(atarDir) * speed);
+		color = { 255,255,255,255 };
+	}
+	if (isActive) {
+		position.x += velocity.x;
+		position.y += velocity.y;
+
+		if (position.x + scale < 320 || position.x - scale > 2240 ||
+			position.y + scale < 0 || position.y - scale > 1440) {
+			Deactivate();
+		}
 		//shoot from atar pos in right direction
 	}
 
@@ -44,6 +58,7 @@ void Bullet::Update(SDL_Point atarPos, string atarDir, const bool pressed[SDL_NU
 
 void Bullet::Deactivate() {
 	position = { -100, -100 };
+	color = { 0, 0, 0, 0 };
 	isActive = false;
 }
 

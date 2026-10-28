@@ -9,6 +9,7 @@
 #include "GammaField.h"
 #include "MagicPixel.h"
 #include "ShieldSeg.h"
+#include "Bullet.h"
 
 using namespace std;
 
@@ -36,13 +37,14 @@ Atar gameAtar;
 GammaField gameGamma(gameSpeed);
 MagicPixel gamePixel;
 ShieldSeg testSeg(43); //43, 128, 213
+Bullet gameBullet;
 
 int score = 0;
 int hiScore = 10000;
 int bonus = 3000;
 int lives = 3;
 bool dead = false;
-string atarDirection;
+float atarDirection;
 
 //death defines
 struct Explosion {
@@ -123,19 +125,6 @@ int main() {
 						//make bad noise when i have sound
 					}
 				}
-				else if (state == GameState::DEATH) {
-					//wait for input then reset to initial game state
-					if (deathAnimCounter >= 200) {
-						if (sc == SDL_SCANCODE_SPACE) {
-							--lives; //should happen once
-							gameAtar.reset();
-							gamePixel.reset();
-							gameEyeball.reset();
-							testSeg.reset();
-							state = GameState::GAME;
-						}
-					}
-				}
 				break;
 
 			case SDL_KEYUP:
@@ -182,6 +171,9 @@ int main() {
 			testSeg.Update();
 			testSeg.Render();
 
+			gameBullet.Update(gameAtar.getPosition(), atarDirection, input.held);
+			gameBullet.Render();
+
 			//display hiscore, score, bonus, lives, and update bonus
 
 			printString(std::to_string(hiScore), { 100, 100 }, { 0, 0, 255, 128 }, 4);
@@ -221,6 +213,12 @@ int main() {
 				gameAtar.addPosition({ static_cast<int>(std::lround(ux * 32)), static_cast<int>(std::lround(uy * 32)) }); //may increase bump distance later
 			}//todo: test fun collision
 
+			if (SDL_HasIntersection(gameBullet.getHitbox(), testSeg.getHitbox())) {
+				gameBullet.Deactivate();
+				score += testSeg.getPoints();
+				testSeg.destroyed();
+			}//hardcoding for testing until i make full ring
+
 			renderFrame();
 			clearScreen();
 			frameCount = (frameCount + 1) % 60;
@@ -230,9 +228,8 @@ int main() {
 			}//render frame and update counters
 		}
 		else if (state == GameState::DEATH) {
-			
+			Uint32 start = SDL_GetTicks();//for frame update
 			if (deathAnimCounter < 200) {
-				Uint32 start = SDL_GetTicks();//for frame update
 
 				transformPoints(explosion.localPts,explosion.worldPts,explosion.ptCt,explosion.center,explosion.scale, explosion.angle);
 				drawVectorPic(explosion.worldPts, explosion.indices, explosion.indCt, explosion.color);
@@ -258,26 +255,37 @@ int main() {
 				printString(std::to_string(lives), { 2290, 1340 }, { 0, 0, 255, 128 }, 4);
 
 				explosion.color = {255, 255, 255, --explosion.transparency};
-				++deathAnimCounter;
-
-				renderFrame();
-				clearScreen();
-				frameCount = (frameCount + 1) % 60;
-				Uint32 elapsed = SDL_GetTicks() - start;
-				if (elapsed < 16) {
-					SDL_Delay(16 - elapsed);
-				}//render frame and update counters
 			}
 			else if (lives-1 == -1) {
 				deathAnimCounter = 0;
 				state = GameState::GAMEOVER;
 			}
 			else {
-				clearScreen();
 				printString(std::to_string(score), { 1600, 600 }, { 0, 0, 255, 128 }, 8);
 				printString(std::to_string(lives-1), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
-				renderFrame();
+
+				if (deathAnimCounter > 380) {
+					--lives; //should happen once
+					gameAtar.reset();
+					gamePixel.reset();
+					gameEyeball.reset();
+					testSeg.reset();
+					gameBullet.Deactivate();
+					gameBullet.reset();
+					state = GameState::GAME;
+				}
 			}
+
+			++deathAnimCounter;
+
+			renderFrame();
+			clearScreen();
+			frameCount = (frameCount + 1) % 60;
+
+			Uint32 elapsed = SDL_GetTicks() - start;
+			if (elapsed < 16) {
+				SDL_Delay(16 - elapsed);
+			}//render frame and update counters
 		}
 		else if (state == GameState::GAMEOVER) {
 			if (deathAnimCounter < 300) {
@@ -301,6 +309,8 @@ int main() {
 				gamePixel.reset();
 				gameEyeball.reset();
 				testSeg.reset();
+				gameBullet.Deactivate();
+				gameBullet.reset();
 				clearScreen();
 				deathAnimCounter = 0;
 				state = GameState::TITLE;

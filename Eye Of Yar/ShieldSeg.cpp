@@ -25,6 +25,7 @@ ShieldSeg::ShieldSeg(Uint8 brightness) {
 	Dscale = scale;
 	Dangle = angle;
 	Dcolor = color;
+	Dhitbox = hitbox;
 	
 
 	// brightness <= 85 -> 10 pts, 86..170 -> 30 pts, 171..255 -> 50 pts
@@ -37,7 +38,7 @@ ShieldSeg::~ShieldSeg() {
 
 }
 
-void ShieldSeg::isHit() {
+void ShieldSeg::destroyed() {
 	color = { 0, 0, 0, 0 };
 	hitbox.w = 0;
 	hitbox.h = 0;
@@ -53,4 +54,16 @@ void ShieldSeg::Update() {
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
 	hitbox.x = position.x - (6 * scale);
 	hitbox.y = position.y - (6 * scale);
+}
+
+void ShieldSeg::reset() {
+	vectorData = DvectorData;
+	position = Dposition;
+	indices = Dindices;
+	vertCt = DvertCt;
+	indiceCt = DindiceCt;
+	scale = Dscale;
+	angle = Dangle;
+	color = Dcolor;
+	hitbox = Dhitbox;
 }
