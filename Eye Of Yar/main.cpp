@@ -156,6 +156,12 @@ int main() {
 			gameAtar.Update(frameCount, atarDirection, input.held);
 			gameAtar.Render();
 
+			SDL_Point tempCheck = gameAtar.getPosition();
+			float dx = tempCheck.x - 1280;
+			float dy = tempCheck.y - 720;
+			float d2 = dx * dx + dy * dy;
+			bool inField = (d2 >= (375 * 375) && d2 <= (675 * 675)); //calculate for later use
+
 			gameEyeball.Update(frameCount, gameAtar.getPosition());
 			gameEyeball.Render();
 
@@ -171,7 +177,7 @@ int main() {
 			testSeg.Update();
 			testSeg.Render();
 
-			gameBullet.Update(gameAtar.getPosition(), atarDirection, input.held);
+			gameBullet.Update(gameAtar.getPosition(), atarDirection, inField, input.held);
 			gameBullet.Render();
 
 			//display hiscore, score, bonus, lives, and update bonus
@@ -191,12 +197,7 @@ int main() {
 
 			//Collision section: (need to create better handler eventually)
 
-			SDL_Point tempCheck = gameAtar.getPosition();
-			float dx = tempCheck.x - 1280;
-			float dy = tempCheck.y - 720;
-			float d2 = dx * dx + dy * dy;
-
-			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox()) && !(d2 >= (375 * 375) && d2 <= (675 * 675))) {
+			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox()) && !inField) {
 				deathInit(gameAtar.getPosition());
 				deathAnimCounter = 0;
 				state = GameState::DEATH;

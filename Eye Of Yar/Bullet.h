@@ -16,7 +16,7 @@ public:
 
 	~Bullet();
 
-	void Update(SDL_Point, float, const bool pressed[SDL_NUM_SCANCODES]); //uhh
+	void Update(SDL_Point, float, bool, const bool pressed[SDL_NUM_SCANCODES]); //uhh
 	void Deactivate();
 	const SDL_Rect* getHitbox();
 };

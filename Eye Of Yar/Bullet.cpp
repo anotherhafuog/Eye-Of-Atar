@@ -31,9 +31,9 @@ Bullet::~Bullet() {
 
 }
 
-void Bullet::Update(SDL_Point atarPos, float atarDir, const bool pressed[SDL_NUM_SCANCODES]) {
+void Bullet::Update(SDL_Point atarPos, float atarDir, bool inField, const bool pressed[SDL_NUM_SCANCODES]) {
 	
-	if (pressed[SDL_SCANCODE_SPACE] && !isActive) {
+	if (pressed[SDL_SCANCODE_SPACE] && !isActive && !inField) {
 		isActive = true;
 		position = atarPos;
 		velocity.x = (int)std::lround(std::sin(atarDir) * speed);
