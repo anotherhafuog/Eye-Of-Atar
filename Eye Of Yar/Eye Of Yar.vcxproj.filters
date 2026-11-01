@@ -77,5 +77,46 @@
     <ClInclude Include="Bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Sounds\BOUNCE.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\CITY FLY BY.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\FIREBALL.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\LARGE EXPLOSION.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\MEDIUM EXPLOSION.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\PING.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\ROTATING.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\SHIP FIRING.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\SHIP THRUST.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\SMALL EXPLOSION.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\TRANSPARENT WALLS.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Sounds\ZIZZER.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

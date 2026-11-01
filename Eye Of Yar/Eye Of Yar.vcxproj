@@ -72,7 +72,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\sdl\SDL2-2.32.6\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\sdl\SDL2-2.32.6\include;C:\sdl\SDL2_mixer-2.8.1\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\sdl\SDL2-2.32.6\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -114,7 +114,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\sdl\SDL2_mixer-2.8.1\lib\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Atar.h" />
+    <ClInclude Include="audio.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="drawFunctions.h" />
     <ClInclude Include="Eyeball.h" />
@@ -156,6 +158,20 @@
     <ClInclude Include="GammaRing.h" />
     <ClInclude Include="MagicPixel.h" />
     <ClInclude Include="ShieldSeg.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Sounds\BOUNCE.mp3" />
+    <Media Include="Sounds\CITY FLY BY.mp3" />
+    <Media Include="Sounds\FIREBALL.mp3" />
+    <Media Include="Sounds\LARGE EXPLOSION.mp3" />
+    <Media Include="Sounds\MEDIUM EXPLOSION.mp3" />
+    <Media Include="Sounds\PING.mp3" />
+    <Media Include="Sounds\ROTATING.mp3" />
+    <Media Include="Sounds\SHIP FIRING.mp3" />
+    <Media Include="Sounds\SHIP THRUST.mp3" />
+    <Media Include="Sounds\SMALL EXPLOSION.mp3" />
+    <Media Include="Sounds\TRANSPARENT WALLS.mp3" />
+    <Media Include="Sounds\ZIZZER.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

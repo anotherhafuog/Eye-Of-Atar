@@ -1,6 +1,8 @@
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <string>
 #undef main
+#include "audio.h"
 #include "drawFunctions.h"
 #include "GameObject.h"
 #include "Eyeball.h"
@@ -45,6 +47,7 @@ int bonus = 3000;
 int lives = 3;
 bool dead = false;
 float atarDirection;
+bool bgmStart = 0;
 
 //death defines
 struct Explosion {
@@ -85,6 +88,14 @@ int main() {
 
 	initWindow(2560, 1440, SDL_WINDOW_FULLSCREEN_DESKTOP, 4.0);
 
+	//audio initialization
+	audio::init();
+	Mix_Chunk* medExplode = audio::loadSfx("Sounds/MEDIUM EXPLOSION.mp3");
+	Mix_Chunk* zizzer = audio::loadSfx("Sounds/ZIZZER.mp3");
+	Mix_Chunk* ping = audio::loadSfx("Sounds/PING.mp3");
+	Mix_Chunk* bounce = audio::loadSfx("Sounds/BOUNCE.mp3");
+	Mix_Music* bgm = audio::loadMusic("Sounds/SHIP THRUST.mp3"); //todo: lower volume and clean up loop
+
 	//game loop
 	while (!input.quit) {
 		//poll keyboard events (joystick maybe someday)
@@ -110,6 +121,7 @@ int main() {
 						printChar(char('0' + gameSpeed), { 1600, 450 }, { 0, 0, 255, 128 }, 8); //ask for speed
 						renderFrame();
 						clearScreen();
+						audio::playSfx(ping);
 						SDL_Delay(2000);
 						state = GameState::GAME;//print the speed and delay then continue to main gameplay
 					} //convert keystroke into int 1-5
@@ -118,11 +130,12 @@ int main() {
 						printChar(char('0' + gameSpeed), { 1600, 450 }, { 0, 0, 255, 128 }, 8); //ask for speed
 						renderFrame();
 						clearScreen();
+						audio::playSfx(ping);
 						SDL_Delay(2000);
 						state = GameState::GAME;//print the speed and delay then continue to main gameplay
 					}// for keypad...
-					else {
-						//make bad noise when i have sound
+					else if (!(sc >= SDL_SCANCODE_1 && sc <= SDL_SCANCODE_5) || !(sc >= SDL_SCANCODE_KP_1 && sc <= SDL_SCANCODE_KP_5)) {
+						audio::playSfx(bounce);
 					}
 				}
 				break;
@@ -138,6 +151,7 @@ int main() {
 				printString("EYE OF ATAR", { 848,570 }, { 255, 255, 255, 255 }, 8);
 				printString("MMXXVI PROMETHEUS", { 944,1224 }, { 0, 0, 255, 64 }, 4);
 				renderFrame();
+				audio::playSfx(medExplode);
 				deathAnimCounter = 1;
 			}
 		}
@@ -151,6 +165,10 @@ int main() {
 
 		// main gameplay loop
 		else if (state == GameState::GAME){
+			if (bgmStart == 0) {
+				audio::playMusic(bgm);
+				bgmStart = 1;
+			}
 			Uint32 start = SDL_GetTicks();//for frame update
 			//update things
 			gameAtar.Update(frameCount, atarDirection, input.held);
@@ -200,6 +218,7 @@ int main() {
 			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox()) && !inField) {
 				deathInit(gameAtar.getPosition());
 				deathAnimCounter = 0;
+				audio::playSfx(medExplode);
 				state = GameState::DEATH;
 			} //hard coded to test death screen for now
 
@@ -218,6 +237,7 @@ int main() {
 				gameBullet.Deactivate();
 				score += testSeg.getPoints();
 				testSeg.destroyed();
+				audio::playSfx(zizzer);
 			}//hardcoding for testing until i make full ring
 
 			renderFrame();
@@ -258,10 +278,14 @@ int main() {
 				explosion.color = {255, 255, 255, --explosion.transparency};
 			}
 			else if (lives-1 == -1) {
+				bgmStart = 0;
+				audio::stopMusic();
 				deathAnimCounter = 0;
 				state = GameState::GAMEOVER;
 			}
 			else {
+				//bgmStart = 0;
+				//audio::stopMusic();
 				printString(std::to_string(score), { 1600, 600 }, { 0, 0, 255, 128 }, 8);
 				printString(std::to_string(lives-1), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
 
@@ -318,7 +342,16 @@ int main() {
 			}
 		}
 	}
-		killRender();
-		return EXIT_SUCCESS;
+		
+	//freeing audio
+	Mix_FreeChunk(medExplode);
+	Mix_FreeChunk(ping);
+	Mix_FreeChunk(zizzer);
+	Mix_FreeChunk(bounce);
+	Mix_FreeMusic(bgm);
+	audio::shutdown();
+
+	killRender();
+	return EXIT_SUCCESS;
 }
 
