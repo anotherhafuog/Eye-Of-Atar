@@ -42,7 +42,7 @@ ShieldSeg testSeg(43); //43, 128, 213
 Bullet gameBullet;
 
 int score = 0;
-int hiScore = 10000;
+int hiScore = 100000;
 int bonus = 3000;
 int lives = 3;
 bool dead = false;
@@ -200,7 +200,7 @@ int main() {
 
 			//display hiscore, score, bonus, lives, and update bonus
 
-			printString(std::to_string(hiScore), { 100, 100 }, { 0, 0, 255, 128 }, 4);
+			printString(std::to_string(hiScore), { 50, 100 }, { 0, 0, 255, 128 }, 4);
 			printString(std::to_string(score), { 2290, 100 }, { 0, 0, 255, 128 }, 4);
 			printString(std::to_string(bonus), { 2290, 200 }, { 255, 255, 0, 128 }, 4);
 			printString(std::to_string(lives), { 2290, 1340 }, { 0, 0, 255, 128 }, 4);
@@ -270,7 +270,7 @@ int main() {
 				testSeg.Render();
 				//display hiscore, score, bonus, lives
 
-				printString(std::to_string(hiScore), { 100, 100 }, { 0, 0, 255, 128 }, 4);
+				printString(std::to_string(hiScore), { 50, 100 }, { 0, 0, 255, 128 }, 4);
 				printString(std::to_string(score), { 2290, 100 }, { 0, 0, 255, 128 }, 4);
 				printString(std::to_string(bonus), { 2290, 200 }, { 255, 255, 0, 128 }, 4);
 				printString(std::to_string(lives), { 2290, 1340 }, { 0, 0, 255, 128 }, 4);

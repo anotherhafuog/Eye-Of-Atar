@@ -25,10 +25,13 @@ Bullet::Bullet() {
 	Dscale = scale;
 	Dangle = angle;
 	Dcolor = color;
+	audio::init();
+	shoot = audio::loadSfx("Sounds/SHIP FIRING.mp3");
 }
 
 Bullet::~Bullet() {
-
+	Mix_FreeChunk(shoot);
+	audio::shutdown();
 }
 
 void Bullet::Update(SDL_Point atarPos, float atarDir, bool inField, const bool pressed[SDL_NUM_SCANCODES]) {
@@ -39,6 +42,7 @@ void Bullet::Update(SDL_Point atarPos, float atarDir, bool inField, const bool p
 		velocity.x = (int)std::lround(std::sin(atarDir) * speed);
 		velocity.y = (int)std::lround(-std::cos(atarDir) * speed);
 		color = { 255,255,255,255 };
+		audio::playSfx(shoot);
 	}
 	if (isActive) {
 		position.x += velocity.x;

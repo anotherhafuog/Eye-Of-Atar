@@ -29,7 +29,7 @@ ShieldSeg::ShieldSeg(Uint8 brightness) {
 	
 
 	// brightness <= 85 -> 10 pts, 86..170 -> 30 pts, 171..255 -> 50 pts
-	ptGain = 10 + ((brightness * 3) >> 8) * 20;
+	ptGain = 100 + ((brightness * 3) >> 8) * 200;
 	alive = true;
 
 }

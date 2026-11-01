@@ -4,6 +4,7 @@
 #include <vector>
 #include "drawFunctions.h"
 #include "GameObject.h"
+#include "audio.h"
 
 class Bullet : public GameEntity {
 private:
@@ -11,6 +12,8 @@ private:
 	bool isActive;
 	SDL_Point velocity;
 	int speed = 20;
+	Mix_Chunk* shoot;
+
 public:
 	Bullet();
 
