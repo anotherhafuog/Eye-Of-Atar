@@ -22,6 +22,17 @@ private:
 	bool isActive;
 	SDL_Point velocity;
 	Mix_Chunk* zoom;
+	bool firing;
+
+	int blinkFrames;   // last time the eye toggled open/closed
+	int blinksLeft;
+	bool eyeClosed;      // for your draw code to read
+
+	std::vector<SDL_Point> BvectorData;
+	std::vector<int> Bindices;
+	int BvertCt;
+	int BindiceCt;
+	SDL_Color Bcolor;
 
 	public:
 		Eyeball();
@@ -33,6 +44,9 @@ private:
 		void reset();
 		const SDL_Rect* getHitbox();
 		int getState();
+		bool isFiring();
+		void closeEye();
+		void openEye();
 };
 
 #endif

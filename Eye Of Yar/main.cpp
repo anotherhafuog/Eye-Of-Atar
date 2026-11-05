@@ -53,6 +53,7 @@ GammaField gameGamma(gameSpeed);
 MagicPixel gamePixel;
 ShieldRing shield;
 Bullet gameBullet;
+Swirly gameSwirly;
 
 //death defines
 struct Explosion {
@@ -208,6 +209,9 @@ int main() {
 			gameBullet.Update(gameAtar.getPosition(), atarDirection, inField, eyeState, input.held);
 			gameBullet.Render();
 
+			gameSwirly.Update();
+			gameSwirly.Render();
+
 			//display hiscore, score, bonus, lives, and update bonus
 
 			hiScore = (score > hiScore) ? score : hiScore;
@@ -227,7 +231,7 @@ int main() {
 
 			//Collision section: (need to create better handler eventually)
 
-			if (SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox()) && !inField) {
+			if ((SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox()) && !inField), SDL_HasIntersection(gameAtar.getHitbox(), gameSwirly.getHitbox())) {
 				deathInit(gameAtar.getPosition());
 				deathAnimCounter = 0;
 				audio::playSfx(medExplode);
@@ -262,6 +266,10 @@ int main() {
 					audio::playSfx(medExplode);
 					state = GameState::DEATH;
 				}
+			}
+
+			if (gameEyeball.isFiring()) {
+				gameSwirly.Activate(gameAtar.getPosition());
 			}
 
 			// for eyeball collision
@@ -331,6 +339,9 @@ int main() {
 
 				shield.Update(1.0f / 60.0f);
 				shield.Render();
+
+				gameSwirly.Update();
+				gameSwirly.Render();
 				//display hiscore, score, bonus, lives
 
 				printString(std::to_string(hiScore), { 50, 100 }, { 0, 0, 255, 128 }, 4);
@@ -426,6 +437,9 @@ int main() {
 
 				shield.Update(1.0f / 60.0f);
 				shield.Render();
+
+				gameSwirly.Update();
+				gameSwirly.Render();
 				//display hiscore, score, bonus, lives
 
 				printString(std::to_string(hiScore), { 50, 100 }, { 0, 0, 255, 128 }, 4);

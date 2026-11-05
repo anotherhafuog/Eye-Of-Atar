@@ -21,6 +21,12 @@ Eyeball::Eyeball() {
 	Dangle = angle;
 	Dcolor = color;
 
+	BvectorData = { {-5,0}, {5,0} };
+	Bindices = { 0,1 };
+	BvertCt = 2;
+	BindiceCt = 2;
+	Bcolor = { 255, 0, 0, 128 }; //for blinking animation
+
 	hitbox.x = position.x - (scale/2);
 	hitbox.y = position.y - (scale/2);
 	hitbox.w = scale;
@@ -29,6 +35,12 @@ Eyeball::Eyeball() {
 	state = EyeState::IDLE;
 	velocity = { 0,0 };
 	isActive = 0;
+	firing = 0;
+
+	blinkFrames = 0;
+	blinksLeft = 0;
+	eyeClosed = false;
+
 	audio::init();
 	zoom = audio::loadSfx("Sounds/TRANSPARENT WALLS.mp3");
 	srand(time(NULL));// for rand seeding
@@ -40,6 +52,7 @@ Eyeball::~Eyeball() {
 }
 
 void Eyeball::Update(int frameCount, int gameSpeed, SDL_Point atarPos, const bool pressed[SDL_NUM_SCANCODES]){
+	firing = false;
 	if (state == EyeState::IDLE) {
 		if (atarPos.x > position.x) {
 			position.x += 1;
@@ -71,9 +84,30 @@ void Eyeball::Update(int frameCount, int gameSpeed, SDL_Point atarPos, const boo
 				static_cast<int>((d.y / distance) * radius);
 		} //make position be inside the circle
 		//temporary until i figure out collision
+
+		if (frameCount == 0) {   // once per second
+			if ((rand() % 100) < 5 * gameSpeed) {   // 5% per speed level
+				state = EyeState::BLINKING;
+				blinksLeft = 7 - gameSpeed;          // speed 5 -> 2 ... speed 1 -> 6
+				blinkFrames = 0;
+				position = Dposition;
+				closeEye();
+			}
+		}
 	}
 	else if (state == EyeState::BLINKING) {
-
+		if (++blinkFrames >= 15) {               // 15 frames = 1/4 s
+			blinkFrames = 0;
+			if (eyeClosed) {
+				openEye();
+				if (blinksLeft == 0) {
+					state = EyeState::IDLE;
+				}
+			}
+			else {
+				closeEye();
+			}
+		}
 	}
 
 	else if (state == EyeState::BOMB) {
@@ -144,7 +178,7 @@ void Eyeball::reset() {
 	angle = Dangle;
 	color = Dcolor;
 
-
+	firing = 0;
 	hitbox.x = position.x - (scale / 2);
 	hitbox.y = position.y - (scale / 2);
 	state = EyeState::IDLE;
@@ -156,4 +190,30 @@ const SDL_Rect* Eyeball::getHitbox() {
 
 int Eyeball::getState() {
 	return static_cast<int>(state);
+}
+
+bool Eyeball::isFiring() {
+	return firing;
+}
+
+void Eyeball::closeEye() {
+	vectorData = BvectorData;
+	indices = Bindices;
+	vertCt = BvertCt;
+	indiceCt = BindiceCt;
+	color = Bcolor;
+	eyeClosed = true;
+	blinksLeft--;
+	if (blinksLeft == 0) {
+		firing = true;                       // final blink: signal main loop
+	}
+}
+
+void Eyeball::openEye() {
+	vectorData = DvectorData;
+	indices = Dindices;
+	vertCt = DvertCt;
+	indiceCt = DindiceCt;
+	color = Dcolor;
+	eyeClosed = false;
 }
