@@ -21,7 +21,7 @@ public:
 
 	const SDL_Rect* getHitbox();
 
-	void Update();
+	void Update(SDL_Point);
 
 	bool isAlive() const { return alive; }
 

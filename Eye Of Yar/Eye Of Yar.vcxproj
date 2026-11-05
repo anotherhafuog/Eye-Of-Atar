@@ -144,6 +144,7 @@
     <ClCompile Include="GammaRing.cpp" />
     <ClCompile Include="MagicPixel.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ShieldRing.cpp" />
     <ClCompile Include="ShieldSeg.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="GammaField.h" />
     <ClInclude Include="GammaRing.h" />
     <ClInclude Include="MagicPixel.h" />
+    <ClInclude Include="ShieldRing.h" />
     <ClInclude Include="ShieldSeg.h" />
   </ItemGroup>
   <ItemGroup>

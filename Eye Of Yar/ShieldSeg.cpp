@@ -29,13 +29,13 @@ ShieldSeg::ShieldSeg(Uint8 brightness) {
 	
 
 	// brightness <= 85 -> 10 pts, 86..170 -> 30 pts, 171..255 -> 50 pts
-	ptGain = 100 + ((brightness * 3) >> 8) * 200;
+	ptGain = 10 + ((brightness * 3) >> 8) * 20;
 	alive = true;
+
 
 }
 
 ShieldSeg::~ShieldSeg() {
-
 }
 
 void ShieldSeg::destroyed() {
@@ -50,7 +50,8 @@ const SDL_Rect* ShieldSeg::getHitbox() {
 }
 
 
-void ShieldSeg::Update() {
+void ShieldSeg::Update(SDL_Point newPosition) {
+	position = newPosition;
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
 	hitbox.x = position.x - (6 * scale);
 	hitbox.y = position.y - (6 * scale);

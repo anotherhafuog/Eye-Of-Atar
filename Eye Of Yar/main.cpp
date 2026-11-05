@@ -12,11 +12,14 @@
 #include "MagicPixel.h"
 #include "ShieldSeg.h"
 #include "Bullet.h"
+#include "ShieldRing.h"
+
 
 using namespace std;
 
 static int frameCount = 0;
 static int gameSpeed = 1;
+static int level = 1;
 struct InputState {
 	bool quit = 0;
 	bool held[SDL_NUM_SCANCODES];
@@ -38,7 +41,7 @@ Eyelid gameEyelid;
 Atar gameAtar;
 GammaField gameGamma(gameSpeed);
 MagicPixel gamePixel;
-ShieldSeg testSeg(43); //43, 128, 213
+ShieldRing shield;
 Bullet gameBullet;
 
 int score = 0;
@@ -123,6 +126,7 @@ int main() {
 						clearScreen();
 						audio::playSfx(ping);
 						SDL_Delay(2000);
+						shield.reset(level);
 						state = GameState::GAME;//print the speed and delay then continue to main gameplay
 					} //convert keystroke into int 1-5
 					else if (sc >= SDL_SCANCODE_KP_1 && sc <= SDL_SCANCODE_KP_5) {
@@ -192,13 +196,15 @@ int main() {
 			gamePixel.Update(frameCount, gameSpeed, gameAtar.getPosition());
 			gamePixel.Render();
 
-			testSeg.Update();
-			testSeg.Render();
+			shield.Update(1.f / 60.f);
+			shield.Render();
 
 			gameBullet.Update(gameAtar.getPosition(), atarDirection, inField, input.held);
 			gameBullet.Render();
 
 			//display hiscore, score, bonus, lives, and update bonus
+
+			hiScore = (score > hiScore) ? score : hiScore;
 
 			printString(std::to_string(hiScore), { 50, 100 }, { 0, 0, 255, 128 }, 4);
 			printString(std::to_string(score), { 2290, 100 }, { 0, 0, 255, 128 }, 4);
@@ -209,7 +215,7 @@ int main() {
 
 			drawVectorPic({ {320,0}, {2240, 0}, {2240, 1440}, {320,1440} }, { 0,3,1,2 }, 4, { 0,0,255,32 });
 
-			if ((bonus != 0 && frameCount % 10 == 0)) {
+			if ((bonus != 0 && frameCount % 20 == 0)) {
 				bonus -= 10;
 			}//decrement bonus
 
@@ -222,23 +228,32 @@ int main() {
 				state = GameState::DEATH;
 			} //hard coded to test death screen for now
 
-			if (SDL_HasIntersection(gameAtar.getHitbox(), testSeg.getHitbox())) {
-				SDL_Point atarPos = gameAtar.getPosition();
-				SDL_Point eyePos = { 1280, 720 }; //I dont feel like calling getPos!
-				int dx = atarPos.x - eyePos.x;
-				int dy = atarPos.y - eyePos.y;
-				float length = sqrt(dx * dx + dy * dy);
-				float ux = dx / length;
-				float uy = dy / length;
-				gameAtar.addPosition({ static_cast<int>(std::lround(ux * 32)), static_cast<int>(std::lround(uy * 32)) }); //may increase bump distance later
-			}//todo: test fun collision
+			// replace the testSeg / Atar block
+			for (int i = 0; i < shield.size(); ++i) {
+				if (!shield.alive(i)) continue;
+				if (SDL_HasIntersection(gameAtar.getHitbox(), shield.hitbox(i))) {
+					SDL_Point atarPos = gameAtar.getPosition();
+					SDL_Point eyePos = { 1280, 720 }; //I dont feel like calling getPos!
+					int dx = atarPos.x - eyePos.x;
+					int dy = atarPos.y - eyePos.y;
+					float length = sqrt(dx * dx + dy * dy);
+					float ux = dx / length;
+					float uy = dy / length;
+					gameAtar.addPosition({ static_cast<int>(std::lround(ux * 32)), static_cast<int>(std::lround(uy * 32)) }); //may increase bump distance later
+					break;                    // bump once per frame
+				}
+			}
 
-			if (SDL_HasIntersection(gameBullet.getHitbox(), testSeg.getHitbox())) {
-				gameBullet.Deactivate();
-				score += testSeg.getPoints();
-				testSeg.destroyed();
-				audio::playSfx(zizzer);
-			}//hardcoding for testing until i make full ring
+			// replace the testSeg / bullet block
+			for (int i = 0; i < shield.size(); ++i) {
+				if (!shield.alive(i)) continue;
+				if (SDL_HasIntersection(gameBullet.getHitbox(), shield.hitbox(i))) {
+					gameBullet.Deactivate();
+					score += shield.hit(i);
+					audio::playSfx(zizzer);
+					break;                    // one bullet, one segment
+				}
+			}
 
 			renderFrame();
 			clearScreen();
@@ -267,7 +282,8 @@ int main() {
 				gameGamma.Update();
 				gameGamma.Render();
 
-				testSeg.Render();
+				shield.Update(1.0f/60.0f);
+				shield.Render();
 				//display hiscore, score, bonus, lives
 
 				printString(std::to_string(hiScore), { 50, 100 }, { 0, 0, 255, 128 }, 4);
@@ -294,7 +310,6 @@ int main() {
 					gameAtar.reset();
 					gamePixel.reset();
 					gameEyeball.reset();
-					testSeg.reset();
 					gameBullet.Deactivate();
 					gameBullet.reset();
 					state = GameState::GAME;
@@ -333,7 +348,7 @@ int main() {
 				gameAtar.reset();
 				gamePixel.reset();
 				gameEyeball.reset();
-				testSeg.reset();
+				shield.reset(level);
 				gameBullet.Deactivate();
 				gameBullet.reset();
 				clearScreen();
