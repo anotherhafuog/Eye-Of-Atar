@@ -22,7 +22,7 @@ static int gameSpeed = 1;
 static int level = 0;
 int score = 0;
 int hiScore = 100000;
-int defBonus = 3000;
+int defBonus = 4000;
 int bonus = defBonus;
 int lives = 3;
 bool dead = false;
@@ -96,6 +96,7 @@ int main() {
 	//audio initialization
 	audio::init();
 	Mix_Chunk* medExplode = audio::loadSfx("Sounds/MEDIUM EXPLOSION.mp3");
+	Mix_Chunk* lgExplode = audio::loadSfx("Sounds/LARGE EXPLOSION.mp3");
 	Mix_Chunk* zizzer = audio::loadSfx("Sounds/ZIZZER.mp3");
 	Mix_Chunk* ping = audio::loadSfx("Sounds/PING.mp3");
 	Mix_Chunk* bounce = audio::loadSfx("Sounds/BOUNCE.mp3");
@@ -187,7 +188,9 @@ int main() {
 			float d2 = dx * dx + dy * dy;
 			bool inField = (d2 >= (375 * 375) && d2 <= (675 * 675)); //calculate for later use
 
-			gameEyeball.Update(frameCount, gameSpeed, gameAtar.getPosition());
+			eyeState = gameEyeball.getState();
+
+			gameEyeball.Update(frameCount, gameSpeed, gameAtar.getPosition(), input.held);
 			gameEyeball.Render();
 
 			gameEyelid.Update();
@@ -247,11 +250,37 @@ int main() {
 				}
 			}
 
-			if (SDL_HasIntersection(gameAtar.getHitbox(), gameEyeball.getHitbox()) && eyeState == 0)
+			if (SDL_HasIntersection(gameAtar.getHitbox(), gameEyeball.getHitbox()))
 			{
-				eyeState = 2;
-				gameEyeball.changeState(2);
+				if (eyeState == 0) {
+					gameEyeball.changeState(2);
+					audio::playSfx(bounce);
+				}
+				else if (eyeState == 4) {
+					deathInit(gameAtar.getPosition());
+					deathAnimCounter = 0;
+					audio::playSfx(medExplode);
+					state = GameState::DEATH;
+				}
 			}
+
+			// for eyeball collision
+			for (int i = 0; i < shield.size(); ++i) {
+				if (!shield.alive(i)) continue;
+				if (SDL_HasIntersection(gameEyeball.getHitbox(), shield.hitbox(i))  && gameEyeball.getState() == 3) {
+					gameBullet.Deactivate();
+					score += shield.hit(i);
+					eyeState = 4;
+					gameEyeball.changeState(4);
+					audio::playSfx(ping);
+					break;                    //one segment
+				}
+			}
+
+			if (SDL_HasIntersection(gameEyeball.getHitbox(), gamePixel.getHitbox()) && gameEyeball.getState() == 3) {
+				gameEyeball.reset();
+				gamePixel.reset();
+			} //hard coded to test death screen for now
 
 			// replace the testSeg / bullet block
 			for (int i = 0; i < shield.size(); ++i) {
@@ -263,6 +292,14 @@ int main() {
 					break;                    // one bullet, one segment
 				}
 			}
+
+			if (SDL_HasIntersection(gameEyeball.getHitbox(), gameEyelid.getHitbox()) && gameEyeball.getState() == 3) {
+				score += bonus;
+				bonus = 0;
+				deathInit({ 1280,720 });
+				state = GameState::WIN;
+				audio::playSfx(lgExplode);
+			} // win level
 
 			renderFrame();
 			clearScreen();
@@ -402,14 +439,13 @@ int main() {
 			else {
 				//bgmStart = 0;
 				//audio::stopMusic();
-				score += bonus;
-				bonus = defBonus;
 				printString(std::to_string(score), { 1600, 600 }, { 0, 0, 255, 128 }, 8);
 				printString(std::to_string(lives - 1), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
 
 				if (deathAnimCounter > 380) {
-					gameSpeed = (gameSpeed < 5) ? gameSpeed++ : gameSpeed;
+					bonus = defBonus;
 					level = (level + 1) % 2;
+					gameSpeed = (gameSpeed < 5 && level == 0) ? gameSpeed + 1 : gameSpeed;
 					gameAtar.reset();
 					gamePixel.reset();
 					gameEyeball.reset();
@@ -437,6 +473,7 @@ int main() {
 	
 	//freeing audio
 	Mix_FreeChunk(medExplode);
+	Mix_FreeChunk(lgExplode);
 	Mix_FreeChunk(ping);
 	Mix_FreeChunk(zizzer);
 	Mix_FreeChunk(bounce);

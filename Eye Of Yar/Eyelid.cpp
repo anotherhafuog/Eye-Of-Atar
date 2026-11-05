@@ -10,8 +10,16 @@ Eyelid::Eyelid() {
 	scale = 16;
 	angle = 0;
 	color = { 255, 0, 0, 128 };
+	hitbox.x = position.x - 5*scale;
+	hitbox.y = position.y - 3*scale;
+	hitbox.w = 10*scale;
+	hitbox.h = 6*scale;
 }
 
 Eyelid::~Eyelid() {
 
+}
+
+const SDL_Rect* Eyelid::getHitbox() {
+	return &hitbox;
 }

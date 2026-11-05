@@ -6,10 +6,15 @@
 #include "GameObject.h"
 
 class Eyelid : public GameEntity {
+private:
+	SDL_Rect hitbox;
+
 public:
 	Eyelid();
 
 	~Eyelid();
+
+	const SDL_Rect* getHitbox();
 };
 
 #endif

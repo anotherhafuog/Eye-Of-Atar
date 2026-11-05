@@ -26,7 +26,7 @@ Swirly::Swirly() {
 	Dangle = angle;
 	Dcolor = color;
 
-	speed = 8;
+	speed = 10;
 	isActive = 0;
 	velocity = { 0,0 };
 	audio::init();

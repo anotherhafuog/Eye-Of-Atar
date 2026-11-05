@@ -6,28 +6,33 @@
 #include <time.h>
 #include "drawFunctions.h"
 #include "GameObject.h"
+#include "audio.h"
 
 class Eyeball : public GameEntity {
 private:
 	enum class EyeState {
-		IDLE,
-		BLINKING,
-		BOMB,
-		TRAVELING,
-		DANGEROUS
+		IDLE, //0
+		BLINKING, //1
+		BOMB, //2
+		TRAVELING, //3
+		DANGEROUS //4
 	};
 	EyeState state;
 	SDL_Rect hitbox;
+	bool isActive;
+	SDL_Point velocity;
+	Mix_Chunk* zoom;
 
 	public:
 		Eyeball();
 
 		~Eyeball();
 
-		void Update(int, int, SDL_Point);
+		void Update(int, int, SDL_Point, const bool pressed[SDL_NUM_SCANCODES]);
 		void changeState(int);
 		void reset();
 		const SDL_Rect* getHitbox();
+		int getState();
 };
 
 #endif
