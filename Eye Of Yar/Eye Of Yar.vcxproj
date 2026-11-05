@@ -146,6 +146,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShieldRing.cpp" />
     <ClCompile Include="ShieldSeg.cpp" />
+    <ClCompile Include="Swirly.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Atar.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="MagicPixel.h" />
     <ClInclude Include="ShieldRing.h" />
     <ClInclude Include="ShieldSeg.h" />
+    <ClInclude Include="Swirly.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Sounds\BOUNCE.mp3" />

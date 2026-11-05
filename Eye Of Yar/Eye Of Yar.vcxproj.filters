@@ -48,6 +48,9 @@
     <ClCompile Include="ShieldRing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Swirly.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="drawFunctions.h">
@@ -84,6 +87,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ShieldRing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Swirly.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,13 +13,22 @@
 #include "ShieldSeg.h"
 #include "Bullet.h"
 #include "ShieldRing.h"
+#include "Swirly.h"
 
 
 using namespace std;
-
 static int frameCount = 0;
 static int gameSpeed = 1;
-static int level = 1;
+static int level = 0;
+int score = 0;
+int hiScore = 100000;
+int defBonus = 3000;
+int bonus = defBonus;
+int lives = 3;
+bool dead = false;
+float atarDirection;
+bool bgmStart = 0;
+
 struct InputState {
 	bool quit = 0;
 	bool held[SDL_NUM_SCANCODES];
@@ -44,14 +53,6 @@ MagicPixel gamePixel;
 ShieldRing shield;
 Bullet gameBullet;
 
-int score = 0;
-int hiScore = 100000;
-int bonus = 3000;
-int lives = 3;
-bool dead = false;
-float atarDirection;
-bool bgmStart = 0;
-
 //death defines
 struct Explosion {
 	std::vector<SDL_Point> localPts;
@@ -69,7 +70,7 @@ struct Explosion {
 Explosion explosion;
 unsigned int deathAnimCounter = 0;
 
-void deathInit(SDL_Point atarPos) {
+void deathInit(SDL_Point choosePos) {
 	explosion.localPts = {
 		{-2,0},{2,0},{0,2},{0,-2},
 		{-1,1},{1,-1},{1,1},{-1,-1}
@@ -77,7 +78,7 @@ void deathInit(SDL_Point atarPos) {
 	explosion.indices = { 0,1,2,3,4,5,6,7 };
 	explosion.ptCt = 8;
 	explosion.indCt = 8;
-	explosion.center = atarPos;
+	explosion.center = choosePos;
 	explosion.scale = 1.0;
 	explosion.angle = M_PI / 6;
 	explosion.transparency = 255;
@@ -168,7 +169,7 @@ int main() {
 		}
 
 		// main gameplay loop
-		else if (state == GameState::GAME){
+		else if (state == GameState::GAME) {
 			if (bgmStart == 0) {
 				audio::playMusic(bgm);
 				bgmStart = 1;
@@ -263,11 +264,12 @@ int main() {
 				SDL_Delay(16 - elapsed);
 			}//render frame and update counters
 		}
+
 		else if (state == GameState::DEATH) {
 			Uint32 start = SDL_GetTicks();//for frame update
 			if (deathAnimCounter < 200) {
 
-				transformPoints(explosion.localPts,explosion.worldPts,explosion.ptCt,explosion.center,explosion.scale, explosion.angle);
+				transformPoints(explosion.localPts, explosion.worldPts, explosion.ptCt, explosion.center, explosion.scale, explosion.angle);
 				drawVectorPic(explosion.worldPts, explosion.indices, explosion.indCt, explosion.color);
 
 				if (deathAnimCounter % 10) {
@@ -282,7 +284,7 @@ int main() {
 				gameGamma.Update();
 				gameGamma.Render();
 
-				shield.Update(1.0f/60.0f);
+				shield.Update(1.0f / 60.0f);
 				shield.Render();
 				//display hiscore, score, bonus, lives
 
@@ -291,9 +293,11 @@ int main() {
 				printString(std::to_string(bonus), { 2290, 200 }, { 255, 255, 0, 128 }, 4);
 				printString(std::to_string(lives), { 2290, 1340 }, { 0, 0, 255, 128 }, 4);
 
-				explosion.color = {255, 255, 255, --explosion.transparency};
+				drawVectorPic({ {320,0}, {2240, 0}, {2240, 1440}, {320,1440} }, { 0,3,1,2 }, 4, { 0,0,255,32 });
+
+				explosion.color = { 255, 255, 255, --explosion.transparency };
 			}
-			else if (lives-1 == -1) {
+			else if (lives - 1 == -1) {
 				bgmStart = 0;
 				audio::stopMusic();
 				deathAnimCounter = 0;
@@ -303,7 +307,7 @@ int main() {
 				//bgmStart = 0;
 				//audio::stopMusic();
 				printString(std::to_string(score), { 1600, 600 }, { 0, 0, 255, 128 }, 8);
-				printString(std::to_string(lives-1), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
+				printString(std::to_string(lives - 1), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
 
 				if (deathAnimCounter > 380) {
 					--lives; //should happen once
@@ -327,10 +331,11 @@ int main() {
 				SDL_Delay(16 - elapsed);
 			}//render frame and update counters
 		}
+
 		else if (state == GameState::GAMEOVER) {
 			if (deathAnimCounter < 300) {
 				Uint32 start = SDL_GetTicks();//for frame update
-				
+
 				printString("GAME OVER", { 928,672 }, { 255, 0, 0, 255 }, 8);
 				renderFrame();
 				clearScreen();
@@ -356,8 +361,72 @@ int main() {
 				state = GameState::TITLE;
 			}
 		}
+
+		else if (state == GameState::WIN) {
+			Uint32 start = SDL_GetTicks();//for frame update
+			if (deathAnimCounter < 200) {
+
+				transformPoints(explosion.localPts, explosion.worldPts, explosion.ptCt, explosion.center, explosion.scale, -explosion.angle);
+				drawVectorPic(explosion.worldPts, explosion.indices, explosion.indCt, explosion.color);
+
+				if (deathAnimCounter % 10) {
+					explosion.scale++;
+				}
+
+				gameEyelid.Update();
+				gameEyelid.Render();
+
+				gameGamma.Update();
+				gameGamma.Render();
+
+				shield.Update(1.0f / 60.0f);
+				shield.Render();
+				//display hiscore, score, bonus, lives
+
+				printString(std::to_string(hiScore), { 50, 100 }, { 0, 0, 255, 128 }, 4);
+				printString(std::to_string(score), { 2290, 100 }, { 0, 0, 255, 128 }, 4);
+				printString(std::to_string(bonus), { 2290, 200 }, { 255, 255, 0, 128 }, 4);
+				printString(std::to_string(lives), { 2290, 1340 }, { 0, 0, 255, 128 }, 4);
+
+				explosion.color = { 255, 255, 0, --explosion.transparency };
+			}
+
+			else {
+				//bgmStart = 0;
+				//audio::stopMusic();
+				score += bonus;
+				bonus = defBonus;
+				printString(std::to_string(score), { 1600, 600 }, { 0, 0, 255, 128 }, 8);
+				printString(std::to_string(lives - 1), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
+
+				if (deathAnimCounter > 380) {
+					gameSpeed = (gameSpeed < 5) ? gameSpeed++ : gameSpeed;
+					level = (level + 1) % 2;
+					gameAtar.reset();
+					gamePixel.reset();
+					gameEyeball.reset();
+					gameBullet.Deactivate();
+					gameBullet.reset();
+					shield.reset(level);
+					//todo: make gamma rings reset
+					state = GameState::GAME;
+				}
+			}
+
+			++deathAnimCounter;
+
+			renderFrame();
+			clearScreen();
+			frameCount = (frameCount + 1) % 60;
+
+			Uint32 elapsed = SDL_GetTicks() - start;
+			if (elapsed < 16) {
+				SDL_Delay(16 - elapsed);
+			}//render frame and update counters
+			}
 	}
-		
+
+	
 	//freeing audio
 	Mix_FreeChunk(medExplode);
 	Mix_FreeChunk(ping);

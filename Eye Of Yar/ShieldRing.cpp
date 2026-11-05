@@ -24,7 +24,7 @@ ShieldRing::ShieldRing() {
 void ShieldRing::reset(int level) {
 	segs_.clear();
 	slots_.clear();
-	if (level % 2 == 1) { layout_ = Layout::Rings;  buildRings(); }
+	if (level == 0) { layout_ = Layout::Rings;  buildRings(); }
 	else { layout_ = Layout::Snakes; buildSnakes(); }
 	alive_.assign(segs_.size(), 1);
 }
