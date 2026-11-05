@@ -24,7 +24,7 @@ int score = 0;
 int hiScore = 100000;
 int defBonus = 4000;
 int bonus = defBonus;
-int lives = 3;
+int lives = 2;
 bool dead = false;
 float atarDirection;
 bool bgmStart = 0;
@@ -231,7 +231,7 @@ int main() {
 
 			//Collision section: (need to create better handler eventually)
 
-			if ((SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox()) && !inField), SDL_HasIntersection(gameAtar.getHitbox(), gameSwirly.getHitbox())) {
+			if ((SDL_HasIntersection(gameAtar.getHitbox(), gamePixel.getHitbox()) && !inField) || SDL_HasIntersection(gameAtar.getHitbox(), gameSwirly.getHitbox())) {
 				deathInit(gameAtar.getPosition());
 				deathAnimCounter = 0;
 				audio::playSfx(medExplode);

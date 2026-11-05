@@ -10,10 +10,10 @@ Eyelid::Eyelid() {
 	scale = 16;
 	angle = 0;
 	color = { 255, 0, 0, 128 };
-	hitbox.x = position.x - 2*scale;
-	hitbox.y = position.y - 2*scale;
-	hitbox.w = 4*scale;
-	hitbox.h = 4*scale;
+	hitbox.x = position.x - 2;
+	hitbox.y = position.y - 2;
+	hitbox.w = 4;
+	hitbox.h = 4;
 }
 
 Eyelid::~Eyelid() {
