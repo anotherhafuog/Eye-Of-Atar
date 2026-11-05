@@ -28,6 +28,7 @@ int lives = 3;
 bool dead = false;
 float atarDirection;
 bool bgmStart = 0;
+int eyeState = 0;
 
 struct InputState {
 	bool quit = 0;
@@ -170,11 +171,12 @@ int main() {
 
 		// main gameplay loop
 		else if (state == GameState::GAME) {
+			Uint32 start = SDL_GetTicks();//for frame update
+
 			if (bgmStart == 0) {
 				audio::playMusic(bgm);
 				bgmStart = 1;
 			}
-			Uint32 start = SDL_GetTicks();//for frame update
 			//update things
 			gameAtar.Update(frameCount, atarDirection, input.held);
 			gameAtar.Render();
@@ -185,7 +187,7 @@ int main() {
 			float d2 = dx * dx + dy * dy;
 			bool inField = (d2 >= (375 * 375) && d2 <= (675 * 675)); //calculate for later use
 
-			gameEyeball.Update(frameCount, gameAtar.getPosition());
+			gameEyeball.Update(frameCount, gameSpeed, gameAtar.getPosition());
 			gameEyeball.Render();
 
 			gameEyelid.Update();
@@ -200,7 +202,7 @@ int main() {
 			shield.Update(1.f / 60.f);
 			shield.Render();
 
-			gameBullet.Update(gameAtar.getPosition(), atarDirection, inField, input.held);
+			gameBullet.Update(gameAtar.getPosition(), atarDirection, inField, eyeState, input.held);
 			gameBullet.Render();
 
 			//display hiscore, score, bonus, lives, and update bonus
@@ -243,6 +245,12 @@ int main() {
 					gameAtar.addPosition({ static_cast<int>(std::lround(ux * 32)), static_cast<int>(std::lround(uy * 32)) }); //may increase bump distance later
 					break;                    // bump once per frame
 				}
+			}
+
+			if (SDL_HasIntersection(gameAtar.getHitbox(), gameEyeball.getHitbox()) && eyeState == 0)
+			{
+				eyeState = 2;
+				gameEyeball.changeState(2);
 			}
 
 			// replace the testSeg / bullet block

@@ -34,9 +34,9 @@ Bullet::~Bullet() {
 	audio::shutdown();
 }
 
-void Bullet::Update(SDL_Point atarPos, float atarDir, bool inField, const bool pressed[SDL_NUM_SCANCODES]) {
+void Bullet::Update(SDL_Point atarPos, float atarDir, bool inField, int eyeState, const bool pressed[SDL_NUM_SCANCODES]) {
 	
-	if (pressed[SDL_SCANCODE_SPACE] && !isActive && !inField) {
+	if (pressed[SDL_SCANCODE_SPACE] && !isActive && !inField && !(eyeState > 1)) {
 		isActive = true;
 		position = atarPos;
 		velocity.x = (int)std::lround(std::sin(atarDir) * speed);

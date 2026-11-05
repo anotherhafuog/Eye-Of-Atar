@@ -20,43 +20,96 @@ Eyeball::Eyeball() {
 	Dscale = scale;
 	Dangle = angle;
 	Dcolor = color;
+
+	hitbox.x = position.x - (scale/2);
+	hitbox.y = position.y - (scale/2);
+	hitbox.w = scale;
+	hitbox.h = scale;
+
+	state = EyeState::IDLE;
+	srand(time(NULL));// for rand seeding
 }
 
 Eyeball::~Eyeball() {
 
 }
 
-void Eyeball::Update(int frameCount, SDL_Point atarPos){
-	if (atarPos.x > position.x) {
-		position.x += 1;
+void Eyeball::Update(int frameCount, int gameSpeed, SDL_Point atarPos){
+	if (state == EyeState::IDLE) {
+		if (atarPos.x > position.x) {
+			position.x += 1;
+		}
+		else {
+			position.x -= 1;
+		}
+		if (atarPos.y > position.y) {
+			position.y += 1;
+		}
+		else {
+			position.y -= 1;
+		}
+
+		float radius = 10.0;
+		SDL_Point d;
+		d.x = position.x - 1280;
+		d.y = position.y - 720;
+
+		float distance = std::sqrt(
+			static_cast<float>(d.x * d.x + d.y * d.y)
+		); //get distance away from center
+
+		if (distance > radius && distance != 0.0f) {
+			position.x = 1280 +
+				static_cast<int>((d.x / distance) * radius);
+
+			position.y = 720 +
+				static_cast<int>((d.y / distance) * radius);
+		} //make position be inside the circle
+		//temporary until i figure out collision
 	}
-	else {
-		position.x -= 1;
-	}
-	if (atarPos.y > position.y) {
-		position.y += 1;
-	}
-	else {
-		position.y -= 1;
+	else if (state == EyeState::BLINKING) {
+
 	}
 
-	float radius = 10.0;
-	SDL_Point d;
-	d.x = position.x - 1280;
-	d.y = position.y - 720;
+	else if (state == EyeState::BOMB) {
+		position.x = atarPos.x + (rand() % 9);
+		position.y = atarPos.y + (rand() % 9);
+	}
 
-	float distance = std::sqrt(
-		static_cast<float>(d.x * d.x + d.y * d.y)
-	); //get distance away from center
+	else if (state == EyeState::TRAVELING) {
 
-	if (distance > radius && distance != 0.0f) {
-		position.x = 1280 +
-			static_cast<int>((d.x / distance) * radius);
+	}
 
-		position.y = 720 +
-			static_cast<int>((d.y / distance) * radius);
-	} //make position be inside the circle
-	//temporary until i figure out collision
+	else if (state == EyeState::DANGEROUS) {
 
+	}
+
+	hitbox.x = position.x - (scale / 2);
+	hitbox.y = position.y - (scale / 2);
 	transformPoints(vectorData, worldData, vertCt, position, scale, angle);
+}
+
+void Eyeball::changeState(int newState) {
+	state = static_cast<EyeState>(newState);
+}
+
+void Eyeball::reset() {
+	//setting defaults
+	vectorData = DvectorData;
+	position = Dposition;
+	indices = Dindices;
+	vertCt = DvertCt;
+	indiceCt = DindiceCt;
+	scale = Dscale;
+	angle = Dangle;
+	color = Dcolor;
+
+
+	hitbox.x = position.x - (scale / 2);
+	hitbox.y = position.y - (scale / 2);
+	state = EyeState::IDLE;
+}
+
+const SDL_Rect* Eyeball::getHitbox() {
+	return &hitbox;
 }
