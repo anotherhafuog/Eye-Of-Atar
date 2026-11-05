@@ -21,7 +21,7 @@ static int frameCount = 0;
 static int gameSpeed = 1;
 static int level = 0;
 int score = 0;
-int hiScore = 100000;
+int hiScore = 18000;
 int defBonus = 4000;
 int bonus = defBonus;
 int lives = 2;
@@ -406,6 +406,7 @@ int main() {
 				lives = 3;
 				score = 0;
 				bonus = 3000;
+				level = 0;
 				gameAtar.reset();
 				gamePixel.reset();
 				gameEyeball.reset();
@@ -454,7 +455,7 @@ int main() {
 				//bgmStart = 0;
 				//audio::stopMusic();
 				printString(std::to_string(score), { 1600, 600 }, { 0, 0, 255, 128 }, 8);
-				printString(std::to_string(lives - 1), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
+				printString(std::to_string(lives), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
 
 				if (deathAnimCounter > 380) {
 					bonus = defBonus;
