@@ -125,22 +125,24 @@ void Eyeball::Update(int frameCount, int gameSpeed, SDL_Point atarPos, const boo
 
 	else if (state == EyeState::TRAVELING) {
 		if (isActive) {
-			position = atarPos;
+			fpos = { (float)atarPos.x, (float)atarPos.y };
 			float dx = 1280 - atarPos.x;
 			float dy = 720 - atarPos.y;
 			float len = std::sqrt(dx * dx + dy * dy);
 
-			if (len > 0.0001f) {          // avoid divide by zero
-				velocity.x = (dx / len) * 8;  // speed in pixels/second
-				velocity.y = (dy / len) * 8;
+			if (len > 0.0001f) {
+				fvel.x = (dx / len) * 8;
+				fvel.y = (dy / len) * 8;
 			}
 			else {
-				velocity.x = velocity.y = 0;
+				fvel = { 0, 0 };
 			}
 			isActive = 0;
 		}
-		position.x += velocity.x;
-		position.y += velocity.y;
+		fpos.x += fvel.x;
+		fpos.y += fvel.y;
+		position.x = (int)std::lround(fpos.x);
+		position.y = (int)std::lround(fpos.y);
 	}
 
 	else if (state == EyeState::DANGEROUS) {
@@ -150,8 +152,10 @@ void Eyeball::Update(int frameCount, int gameSpeed, SDL_Point atarPos, const boo
 		else {
 			color = { 255,0,0,255 };
 		}
-		position.x -= velocity.x;
-		position.y -= velocity.y;
+		fpos.x -= fvel.x;
+		fpos.y -= fvel.y;
+		position.x = (int)std::lround(fpos.x);
+		position.y = (int)std::lround(fpos.y);
 		if (position.x + scale < 320 || position.x - scale > 2240 ||
 			position.y + scale < 0 || position.y - scale > 1440) {
 			reset();

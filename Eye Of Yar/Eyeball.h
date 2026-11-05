@@ -24,6 +24,9 @@ private:
 	Mix_Chunk* zoom;
 	bool firing;
 
+	SDL_FPoint fpos;
+	SDL_FPoint fvel;
+
 	int blinkFrames;   // last time the eye toggled open/closed
 	int blinksLeft;
 	bool eyeClosed;      // for your draw code to read
