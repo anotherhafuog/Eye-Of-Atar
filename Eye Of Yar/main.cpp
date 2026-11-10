@@ -21,7 +21,7 @@ static int frameCount = 0;
 static int gameSpeed = 1;
 static int level = 0;
 int score = 0;
-int hiScore = 18000;
+int hiScore = 7680;
 int defBonus = 4000;
 int bonus = defBonus;
 int lives = 2;
@@ -125,6 +125,7 @@ int main() {
 				else if (state == GameState::SELECT) {
 					if (sc >= SDL_SCANCODE_1 && sc <= SDL_SCANCODE_5) {
 						gameSpeed = (sc - SDL_SCANCODE_1) + 1;
+						bonus = defBonus + (1000 * (gameSpeed-1));
 						printChar(char('0' + gameSpeed), { 1600, 450 }, { 0, 0, 255, 128 }, 8); //ask for speed
 						renderFrame();
 						clearScreen();
@@ -405,7 +406,7 @@ int main() {
 			else {
 				lives = 3;
 				score = 0;
-				bonus = 3000;
+				bonus = defBonus;
 				level = 0;
 				gameAtar.reset();
 				gamePixel.reset();
@@ -458,7 +459,7 @@ int main() {
 				printString(std::to_string(lives), { 1600, 450 }, { 0, 0, 255, 128 }, 8);
 
 				if (deathAnimCounter > 380) {
-					bonus = defBonus;
+					bonus = defBonus + (1000 * (gameSpeed - 1));
 					level = (level + 1) % 2;
 					gameSpeed = (gameSpeed < 5 && level == 0) ? gameSpeed + 1 : gameSpeed;
 					gameAtar.reset();
